@@ -1,8 +1,5 @@
 <?php
-// Ensure the file is structured to work with MVC
-require_once '../../controllers/LiveController.php';
-$controller = new LiveController();
-$controller->handleRequest();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,6 +42,81 @@ $controller->handleRequest();
             background: url('images/galaxy.jpg') no-repeat center center fixed;
             background-size: cover;
         }
+         /* === CHAT & MEET STYLES === */
+    #chat-space,
+    #meet-space {
+        background: rgba(26, 26, 46, 0.7);
+        padding: 20px;
+        margin: 100px;
+        border-radius: 50px;
+    }
+
+    #chat-window {
+        height: 200px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        overflow-y: auto;
+        border-radius: 15px;
+    }
+
+    #chat-input {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    #chat-input input {
+        flex: 1;
+        padding: 20px;
+        border: none;
+        border-radius: 15px;
+        font-family: 'Dancing Script', cursive;
+        font-size: 18px;
+
+    }
+
+    #chat-input button {
+        background: #8257e5;
+        border: none;
+        color: white;
+        padding: 5px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-family: 'Dancing Script', cursive;
+        font-size: 18px;
+
+    }
+    }
+
+    #meet-window {
+        background: rgba(0, 0, 0, 0.5);
+        height: 250px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+    }
+
+    #meet-controls {
+        margin-top: 10px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+     
+    
+    }
+
+    #meet-controls button {
+        background: #8257e5;
+    border: none;
+    color: white;
+    padding: 1px 5px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: 'Dancing Script', cursive;
+    font-size: 15px;
+}
+}
     </style>
 </head>
 
