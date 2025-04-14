@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation d'Événements - Starzy</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('background3.jpg'); /* Image de fond */
+            background-size: cover; /* Couvre tout l'arrière-plan */
+            color: #ffffff; /* Texte blanc */
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 270px; /* Décalage du contenu vers la droite */
+        }
+
+        .image-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-image: url('image.jpg');
+            background-size: cover;
+            background-position: center;
+            border-right: 2px solid #ffffff;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.6); /* Noir transparent */
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-info, .btn-reserve {
+            background-color: #ff6f61; /* Orange cosmique */
+            border: none;
+        }
+
+        .card-img-top {
+            height: 150px; /* Hauteur fixe pour les images */
+            object-fit: cover; /* Ajuste l'image pour couvrir le conteneur */
+        }
+        .calendar-container {
+            background-color: rgba(10, 10, 30, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 3px solid #00bcd4;
+            box-shadow: 0px 0px 20px #00bcd4;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .day {
+            background-color: rgba(0, 0, 20, 0.8);
+            border: 2px solid #00bcd4;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 5px;
+            color: #00e5ff;
+            box-shadow: 0px 0px 10px #00bcd4;
+        }
+        .day-header {
+            background-color: #8e24aa;
+            color: #ffffff;
+            font-weight: bold;
+            box-shadow: 0px 0px 10px #8e24aa;
+        }
+        .event {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #ff4081;
+            font-weight: bold;
+            text-shadow: 0px 0px 5px #ff4081;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Image -->
+    <div class="image-sidebar"></div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">Réservez vos Événements Astronomiques</h1>
+            <div class="row">
+                <!-- Événement 1 - Observation de la Lune -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement1.jpg" class="card-img-top" alt="Observation de la Lune">
+                        <div class="card-body">
+                            <h5 class="card-title">Observation de la Lune</h5>
+                            <p class="card-text">Description de l'événement Observation de la Lune.</p>
+                            <p><strong>Prix</strong>: 18.99€</p>
+                            <a href="info.html#evenement1" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Événement 2 - Des Étoiles Filantes -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement2.jpg" class="card-img-top" alt="Des Étoiles Filantes">
+                        <div class="card-body">
+                            <h5 class="card-title">Des Étoiles Filantes</h5>
+                            <p class="card-text">Description de l'événement des étoiles filantes.</p>
+                            <p><strong>Prix</strong>: 65.99€</p>
+                            <a href="info.html#evenement2" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Événement 3 - Eclipse -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement3.jpg" class="card-img-top" alt="Eclipse">
+                        <div class="card-body">
+                            <h5 class="card-title">Éclipse</h5>
+                            <p class="card-text">Description de l'événement éclipse.</p>
+                            <p><strong>Prix</strong>: 95.99€</p>
+                            <a href="info.html#evenement3" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Événement 4 - Observation des Comètes -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement4.jpg" class="card-img-top" alt="Observation des Comètes">
+                        <div class="card-body">
+                            <h5 class="card-title">Observation des Comètes</h5>
+                            <p class="card-text">Description de l'événement Observation des Comètes.</p>
+                            <p><strong>Prix</strong>: 350.99€</p>
+                            <a href="info.html#evenement4" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Événement 5 - Ateliers d'Astronomie -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement5.png" class="card-img-top" alt="Ateliers d'Astronomie">
+                        <div class="card-body">
+                            <h5 class="card-title">Ateliers d'Astronomie</h5>
+                            <p class="card-text">Description de l'événement ateliers d'astronomie.</p>
+                            <p><strong>Prix</strong>: 275.99€</p>
+                            <a href="info.html#evenement5" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Événement 6 - Camps d'Astronomie -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement6.jpg" class="card-img-top" alt="Camps d'Astronomie">
+                        <div class="card-body">
+                            <h5 class="card-title">Camps d'Astronomie</h5>
+                            <p class="card-text">Description de l'événement camps d'astronomie.</p>
+                            <p><strong>Prix</strong>: 75.99€</p>
+                            <a href="info.html#evenement6" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Événement 7 - Stages d'Astronomie -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement7.jpg" class="card-img-top" alt="Stages d'Astronomie">
+                        <div class="card-body">
+                            <h5 class="card-title">Stages d'Astronomie</h5>
+                            <p class="card-text">Description de l'événement stages d'astronomie.</p>
+                            <p><strong>Prix</strong>: 500.99€</p>
+                            <a href="info.html#evenement7" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Événement 8 - Observation d'Étoiles au Milieu de la Nature -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement8.jpg" class="card-img-top" alt="Observation d'Étoiles au Milieu de la Nature">
+                        <div class="card-body">
+                            <h5 class="card-title">Observation d'Étoiles au Milieu de la Nature</h5>
+                            <p class="card-text">Description de l'événement observation d'étoiles au milieu de la nature.</p>
+                            <p><strong>Prix</strong>: 120.99€</p>
+                            <a href="info.html#evenement8" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Événement 9 - Des Aventures Astronomiques dans le Monde Virtuel (VR) -->
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="evenement9.jpg" class="card-img-top" alt="Des Aventures Astronomiques dans le Monde Virtuel (VR)">
+                        <div class="card-body">
+                            <h5 class="card-title">Des Aventures Astronomiques dans le Monde Virtuel (VR)</h5>
+                            <p class="card-text">Description de l'événement des aventures astronomiques dans le monde virtuel (VR).</p>
+                            <p><strong>Prix</strong>: 25.99€</p>
+                            <a href="info.html#evenement9" class="btn btn-info">Info</a>
+                            <a href="reserver.html" class="btn btn-reserve">Réserver</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="controls">
+                <select id="month-select"></select>
+                <select id="year-select"></select>
+            </div>
+            <div class="calendar-container">
+                <div class="calendar" id="calendar"></div>
+            </div>
+        </div>
+    </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const monthSelect = document.getElementById("month-select");
+        const yearSelect = document.getElementById("year-select");
+        const calendar = document.getElementById("calendar");
+
+        // Mois en français
+        const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+
+        // Remplir les options du mois
+        for (let i = 0; i < months.length; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.textContent = months[i];
+            monthSelect.appendChild(option);
+        }
+
+        // Remplir les options de l'année (de 2000 à 2050)
+        for (let i = 2000; i <= 2050; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            yearSelect.appendChild(option);
+        }
+
+        // Sélectionner la date actuelle par défaut
+        let today = new Date();
+        monthSelect.value = today.getMonth();
+        yearSelect.value = today.getFullYear();
+
+        function generateCalendar(month, year) {
+            calendar.innerHTML = ""; // Réinitialisation
+
+            // Ajouter les jours de la semaine
+            const daysOfWeek = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+            for (let day of daysOfWeek) {
+                let dayHeader = document.createElement("div");
+                dayHeader.classList.add("day", "day-header");
+                dayHeader.textContent = day;
+                calendar.appendChild(dayHeader);
+            }
+
+            // Obtenir le premier jour du mois
+            let firstDay = new Date(year, month, 1).getDay();
+            firstDay = firstDay === 0 ? 7 : firstDay; // Ajuster le dimanche (0) en 7
+
+            // Nombre de jours dans le mois
+            let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Ajouter les cases vides avant le 1er jour du mois
+            for (let i = 1; i < firstDay; i++) {
+                let emptyDay = document.createElement("div");
+                emptyDay.classList.add("day");
+                calendar.appendChild(emptyDay);
+            }
+
+            // Ajouter les jours du mois
+            for (let day = 1; day <= daysInMonth; day++) {
+                let dayCell = document.createElement("div");
+                dayCell.classList.add("day");
+                dayCell.textContent = day;
+
+                // Vérifier si un événement est prévu
+                let event = checkEvent(day, month, year);
+                if (event) {
+                    let eventSpan = document.createElement("span");
+                    eventSpan.classList.add("event");
+                    eventSpan.textContent = event;
+                    dayCell.appendChild(eventSpan);
+                }
+
+                calendar.appendChild(dayCell);
+            }
+        }
+
+        // Fonction pour vérifier les événements
+        function checkEvent(day, month, year) {
+            const events = {
+                "20-3-2025": "🌕 Obs. Lune",
+                "5-6-2025": "🔭 Nuit des étoiles",
+                "15-8-2025": "🌠 Pluie de météores",
+                "30-11-2025": "🪐 Conj. Jupiter-Saturne"
+            };
+            return events[`${day}-${month + 1}-${year}`] || null;
+        }
+
+        // Générer le calendrier à la sélection
+        monthSelect.addEventListener("change", () => {
+            generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+        });
+
+        yearSelect.addEventListener("change", () => {
+            generateCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+        });
+
+        // Afficher le calendrier initial
+        generateCalendar(today.getMonth(), today.getFullYear());
+    });
+</script>
+</body>
+</html>
