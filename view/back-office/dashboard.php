@@ -120,7 +120,7 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <h2>Starzy Admin</h2>
     <a href="dashboard.php">Dashboard</a>
     <a href="eventlistbyticket.php">Event List by Ticket</a>
-    <a href="gestionevent.php">Gérer les Événements</a>
+    <a href="gestionevent.php">Gestion des Événements</a>
 </div>
 
 <div class="main-content">

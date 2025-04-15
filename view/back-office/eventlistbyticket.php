@@ -31,26 +31,29 @@ if ($selectedEventId) {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .sidebar {
-      width: 250px;
-      background-color: #343a40;
-      min-height: 100vh;
-      color: white;
-      padding: 20px;
-    }
-    .sidebar h2 {
-      color: #ffc107;
-    }
-    .sidebar a {
-      color: white;
-      text-decoration: none;
-      display: block;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
-    .sidebar a:hover {
-      background-color: #495057;
-    }
+            width: 250px;
+            background-color: #1f1f1f;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+        }
+
+        .sidebar h2 {
+            color: #ffc107;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background-color: #333;
+        }
     .main {
       flex-grow: 1;
       background-color: #f8f9fa;
@@ -69,8 +72,8 @@ if ($selectedEventId) {
 <div class="sidebar">
   <h2>Starzy Admin</h2>
   <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
-  <a href="gestionevent.php"><i class="fas fa-plus"></i> gestion event</a>
   <a href="eventlistbyticket.php"><i class="fas fa-list"></i> Event List by Ticket</a>
+  <a href="gestionevent.php"><i class="fas fa-plus"></i> Gestion des événements</a>
 </div>
 
 <div class="main">
