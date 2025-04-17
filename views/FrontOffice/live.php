@@ -430,14 +430,10 @@ body {
     font-weight: 600;
 }
 #editMessageModalLabel{
-	
-	
 	color:black;
 }
 
 #msgid {
-	
-	
 	color:black;
 }
 #deleteConfirmModalLabel {
@@ -736,7 +732,7 @@ body {
             </div>
             <div class="footer-info">
                 <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://html.design/">Free Html
-                     Templates</a><br><br>&copy; <span id="displayYear"></span> Distributed By 
+                     Templates</a><br><br>&copy; <span id="displayYear"></span> Distributed By <a 
                      href="https://themewagon.com/" target="_blank">ThemeWagon</a></p>
             </div>
         </div>
@@ -763,474 +759,475 @@ body {
     <!-- Chat JavaScript -->
     <script>
         $(document).ready(function() {
-            let currentDiscussionId = null;
-            let currentUserId = Math.floor(Math.random() * 10000); // Simulating user ID
-            let messagePollingInterval = null;
-            
-            // Create stars for the background animation
-            createStars();
-            
-            // Load recent discussions when page loads
-            loadRecentDiscussions();
-            // Refresh discussions periodically
-            setInterval(loadRecentDiscussions, 10000);
-            
-            // Start new chat button
-            $('#new-chat-btn').click(function() {
-                // Hide chat container if visible
-                $('#chat-container').hide();
-                // Show user form
-                $('#user-form').show();
-                // Clear current discussion ID
-                currentDiscussionId = null;
-                // Clear the username field
-                $('#username').val('');
-                // Stop message polling
-                if (messagePollingInterval) {
-                    clearInterval(messagePollingInterval);
-                    messagePollingInterval = null;
-                }
-            });
-            
-            // Start chat button click
-            $('#start-chat').click(function() {
-                const username = $('#username').val().trim();
-                if (username === '') {
-                    alert('Please enter a username');
-                    return;
-                }
-                
-                // Create a new discussion
-                $.ajax({
-                    url: '../../controllers/LiveController.php?action=createDiscussion',
-                    method: 'POST',
-                    data: { 
-                        nom_user: username,
-                        user_id: currentUserId
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            currentDiscussionId = response.discussion_id;
-                            
-                            // Show chat container
-                            $('#user-form').hide();
-                            $('#chat-container').show();
-                            
-                            // Refresh the discussions list
-                            loadRecentDiscussions();
-                            
-                            // Start polling for messages
-                            loadMessages();
-                            messagePollingInterval = setInterval(loadMessages, 3000);
-                        } else {
-                            alert('Error creating chat: ' + response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Error connecting to server');
-                    }
-                });
-            });
-            
-            // Send message button click
-            $('#send-button').click(sendMessage);
-            
-            // Also send on Enter key press
-            $('#message').keypress(function(e) {
-                if (e.which === 13) {
-                    sendMessage();
-                }
-            });
-            
-            // Function to send a message
-            function sendMessage() {
-                const messageText = $('#message').val().trim();
-                if (messageText === '' || !currentDiscussionId) {
-                    return;
-                }
-                
-                $.ajax({
-                    url: '../../controllers/LiveController.php?action=sendMessage',
-                    method: 'POST',
-                    data: {
-                        discussion_id: currentDiscussionId,
-                        message: messageText
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            // Clear input field
-                            $('#message').val('');
-                            // Load the new message
-                            loadMessages();
-                            // Refresh discussions list to show most recent activity
-                            loadRecentDiscussions();
-                        } else {
-                            alert('Error sending message: ' + response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Error connecting to server');
-                    }
-                });
-            }
-            
-            // Function to load messages
-            function loadMessages() {
-    if (!currentDiscussionId) return;
+    // Global variables
+    let currentDiscussionId = null;
+    let currentUserId = Math.floor(Math.random() * 10000); // Simulating user ID
+    let messagePollingInterval = null;
     
-    $.ajax({
-        url: '../../controllers/LiveController.php?action=getMessages',
-        method: 'GET',
-        data: { discussion_id: currentDiscussionId },
-        success: function(messages) {
-            $('#messages').empty();
-            
-            messages.forEach(function(message) {
-                const isSelf = message.user_id == currentUserId;
-                const messageClass = isSelf ? 'message-self' : 'message-user';
-                
-                // Format date
-                const messageDate = new Date(message.date_envoi);
-                const formattedDate = messageDate.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                // Only show edit/delete buttons for own messages
-                const actionButtons = isSelf ? `
-                    <div class="message-actions">
-                        <button class="message-action-btn edit-message" data-id="${message.id_message}">
-                            <i class="fa fa-pencil"></i>
-                        </button>
-                        <button class="message-action-btn delete-message" data-id="${message.id_message}">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                ` : '';
-                
-                const messageHtml = `
-                    <div class="message ${messageClass}" data-id="${message.id_message}">
-                        ${actionButtons}
-                        <div class="message-meta">
-                            <strong>${message.nom_user}</strong> • ${formattedDate}
-                        </div>
-                        <div class="message-text">
-                            ${message.raw_message}
-                        </div>
-                    </div>
-                `;
-                
-                $('#messages').append(messageHtml);
-            });
-            
-            // Add event handlers for edit and delete buttons
-            $('.edit-message').click(function() {
-                const messageId = $(this).data('id');
-                const messageText = $(this).closest('.message').find('.message-text').text().trim();
-                openEditMessageModal(messageId, messageText);
-            });
-            
-            $('.delete-message').click(function() {
-                const messageId = $(this).data('id');
-                openDeleteConfirmModal('message', messageId, 'Are you sure you want to delete this message?');
-            });
-            
-            // Scroll to bottom
-            const chatWindow = document.getElementById('chat-window');
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        },
-        error: function() {
-            console.error('Error loading messages');
+    // Create stars for the background animation
+    createStars();
+    
+    // Load recent discussions when page loads
+    loadRecentDiscussions();
+    // Refresh discussions periodically
+    setInterval(loadRecentDiscussions, 10000);
+    
+    // Start new chat button
+    $('#new-chat-btn').click(function() {
+        // Hide chat container if visible
+        $('#chat-container').hide();
+        // Show user form
+        $('#user-form').show();
+        // Clear current discussion ID
+        currentDiscussionId = null;
+        // Clear the username field
+        $('#username').val('');
+        // Stop message polling
+        if (messagePollingInterval) {
+            clearInterval(messagePollingInterval);
+            messagePollingInterval = null;
         }
     });
-}
-            
-            // Function to load recent discussions
-            function loadRecentDiscussions() {
-                $.ajax({
-                    url: '../../controllers/LiveController.php?action=getDiscussions',
-                    method: 'GET',
-                    success: function(discussions) {
-                        $('#discussions-list').empty();
-						if (discussions.length === 0) {
-                            $('#discussions-list').html('<p class="text-muted">No recent chats found.</p>');
-                            return;
-                        }
-                        
-                        discussions.forEach(function(discussion) {
-                            const discussionDate = new Date(discussion.creation_date);
-                            const formattedDate = discussionDate.toLocaleString([], {
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                            
-                            const initials = discussion.nom_user.split(' ').map(word => word[0]).join('').toUpperCase();
-                            
-                            const isActive = discussion.id_dis == currentDiscussionId;
-                            const activeClass = isActive ? 'active bg-light' : '';
-                            
-                            // Options buttons for discussions
-                            const discussionActions = `
-                                <div class="discussion-actions">
-                                    <button class="discussion-action-btn edit edit-discussion" data-id="${discussion.id_dis}" data-name="${discussion.nom_user}">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button class="discussion-action-btn delete delete-discussion" data-id="${discussion.id_dis}">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            `;
-                            
-                            const discussionHtml = `
-    <div class="discussion-item p-3 mb-2 ${activeClass}" data-id="${discussion.id_dis}">
-    <div class="discussion-actions">
-        <button class="discussion-action-btn edit edit-discussion" data-id="${discussion.id_dis}" data-name="${discussion.nom_user}">
-            <i class="fa fa-pencil"></i>
-        </button>
-        <button class="discussion-action-btn delete delete-discussion" data-id="${discussion.id_dis}">
-            <i class="fa fa-trash"></i>
-        </button>
-    </div>
-    <div class="d-flex align-items-center">
-        <div class="user-avatar">${initials}</div>
-        <div class="discussion-info">
-            <div class="discussion-name">${discussion.nom_user}</div>
-            <div class="discussion-date">${formattedDate}</div>
-        </div>
-    </div>
-</div>
-`;
-                            
-                            $('#discussions-list').append(discussionHtml);
-                        });
-                        
-                        // Add click event for joining existing discussions
-                        $('.discussion-item').click(function(e) {
-                            // Only proceed if the click was not on an action button
-                            if (!$(e.target).closest('.discussion-actions').length) {
-                                const discussionId = $(this).data('id');
-                                // Don't reload if already in this discussion
-                                if (currentDiscussionId === discussionId) return;
-                                
-                                currentDiscussionId = discussionId;
-                                
-                                // Set this discussion as active
-                                $('.discussion-item').removeClass('active bg-light');
-                                $(this).addClass('active bg-light');
-                                
-                                // Show chat container
-                                $('#user-form').hide();
-                                $('#chat-container').show();
-                                
-                                // Clear existing interval
-                                if (messagePollingInterval) {
-                                    clearInterval(messagePollingInterval);
-                                }
-                                
-                                // Start polling for messages
-                                loadMessages();
-                                messagePollingInterval = setInterval(loadMessages, 3000);
-                            }
-                        });
-                        
-                        // Add event handlers for edit and delete discussion buttons
-                        $('#discussions-list').off('click', '.edit-discussion').on('click', '.edit-discussion', function(e) {
-    e.stopPropagation(); // Prevent discussion selection
-    const discussionId = $(this).data('id');
-    const discussionName = $(this).data('name');
-    openEditDiscussionModal(discussionId, discussionName);
-});
-                        
-                        $('#discussions-list').off('click', '.delete-discussion').on('click', '.delete-discussion', function(e) {
-    e.stopPropagation(); // Prevent discussion selection
-    const discussionId = $(this).data('id');
-    openDeleteConfirmModal('discussion', discussionId, 'Are you sure you want to delete this chat? All messages will be permanently deleted.');
-});
-                    },
-                    error: function() {
-                        console.error('Error loading discussions');
-                    }
-                });
-            }
-            
-            // Function to open edit message modal
-            function openEditMessageModal(messageId, messageText) {
-                $('#edit-message-id').val(messageId);
-                $('#edit-message-text').val(messageText);
-                $('#editMessageModal').modal('show');
-            }
-            
-            // Function to open edit discussion modal
-            function openEditDiscussionModal(discussionId, discussionName) {
-                $('#edit-discussion-id').val(discussionId);
-                $('#edit-discussion-name').val(discussionName);
-                $('#editDiscussionModal').modal('show');
-            }
-            
-            // Function to open delete confirmation modal
-            function openDeleteConfirmModal(itemType, itemId, confirmText) {
-                $('#delete-item-type').val(itemType);
-                $('#delete-item-id').val(itemId);
-                $('#delete-confirm-text').text(confirmText);
-                $('#deleteConfirmModal').modal('show');
-            }
-            
-            // Save edited message
-            $('#save-message-edit').click(function() {
-                const messageId = $('#edit-message-id').val();
-                const newText = $('#edit-message-text').val().trim();
-                
-                if (!newText) {
-                    alert('Message cannot be empty');
-                    return;
-                }
-                
-                $.ajax({
-                    url: '../../controllers/LiveController.php?action=updateMessage',
-                    method: 'POST',
-                    data: {
-                        message_id: messageId,
-                        new_text: newText
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $('#editMessageModal').modal('hide');
-                            loadMessages();
-                        } else {
-                            alert('Error updating message: ' + response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Error connecting to server');
-                    }
-                });
-            });
-            
-            // Save edited discussion name
-            $('#save-discussion-edit').click(function() {
-                const discussionId = $('#edit-discussion-id').val();
-                const newName = $('#edit-discussion-name').val().trim();
-                
-                if (!newName) {
-                    alert('Chat name cannot be empty');
-                    return;
-                }
-                
-                $.ajax({
-                    url: '../../controllers/LiveController.php?action=updateDiscussionName',
-                    method: 'POST',
-                    data: {
-                        discussion_id: discussionId,
-                        new_name: newName
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $('#editDiscussionModal').modal('hide');
-                            loadRecentDiscussions();
-                            // Also reload messages to update the username in the message headers
-                            if (currentDiscussionId === discussionId) {
-                                loadMessages();
-                            }
-                        } else {
-                            alert('Error updating chat name: ' + response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Error connecting to server');
-                    }
-                });
-            });
-            
-            // Confirm delete
-            $('#confirm-delete').click(function() {
-                const itemType = $('#delete-item-type').val();
-                const itemId = $('#delete-item-id').val();
-                
-                let url, data;
-                
-                if (itemType === 'message') {
-                    url = '../../controllers/LiveController.php?action=deleteMessage';
-                    data = { message_id: itemId };
-                } else if (itemType === 'discussion') {
-                    url = '../../controllers/LiveController.php?action=deleteDiscussion';
-                    data = { discussion_id: itemId };
+    
+    // Start chat button click
+    $('#start-chat').click(function() {
+        const username = $('#username').val().trim();
+        if (username === '') {
+            alert('Please enter a username');
+            return;
+        }
+        
+        // Create a new discussion
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=createDiscussion',
+            method: 'POST',
+            data: { 
+                nom_user: username,
+                user_id: currentUserId
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    currentDiscussionId = response.discussion_id;
+                    
+                    // Show chat container
+                    $('#user-form').hide();
+                    $('#chat-container').show();
+                    
+                    // Refresh the discussions list
+                    loadRecentDiscussions();
+                    
+                    // Start polling for messages
+                    loadMessages();
+                    messagePollingInterval = setInterval(loadMessages, 3000);
                 } else {
-                    alert('Invalid item type');
+                    alert('Error creating chat: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error connecting to server');
+            }
+        });
+    });
+    
+    // Send message button click
+    $('#send-button').click(sendMessage);
+    
+    // Also send on Enter key press
+    $('#message').keypress(function(e) {
+        if (e.which === 13) {
+            sendMessage();
+        }
+    });
+    
+    // Function to send a message
+    function sendMessage() {
+        const messageText = $('#message').val().trim();
+        if (messageText === '' || !currentDiscussionId) {
+            return;
+        }
+        
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=sendMessage',
+            method: 'POST',
+            data: {
+                discussion_id: currentDiscussionId,
+                message: messageText,
+                user_id: currentUserId  // Include current user ID
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Clear input field
+                    $('#message').val('');
+                    // Load the new message
+                    loadMessages();
+                    // Refresh discussions list to show most recent activity
+                    loadRecentDiscussions();
+                } else {
+                    alert('Error sending message: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error connecting to server');
+            }
+        });
+    }
+    
+    // Function to load messages
+    function loadMessages() {
+        if (!currentDiscussionId) return;
+        
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=getMessages',
+            method: 'GET',
+            data: { 
+                discussion_id: currentDiscussionId,
+                current_user_id: currentUserId // Pass this to help server identify user's messages
+            },
+            success: function(messages) {
+                $('#messages').empty();
+                
+                // Debug: Log current user ID
+                console.log("Current User ID:", currentUserId);
+                
+                messages.forEach(function(message) {
+                    // Debug: Log message user ID for comparison
+                    console.log("Message ID:", message.id_message, "User ID:", message.user_id);
+                    
+                    // For testing: force all messages to be "self" messages
+                    // In production, uncomment the real check below
+                    const isSelf = true; // message.user_id == currentUserId;
+                    const messageClass = isSelf ? 'message-self' : 'message-user';
+                    
+                    // Format date
+                    const messageDate = new Date(message.date_envoi);
+                    const formattedDate = messageDate.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    // Only show edit/delete buttons for own messages (currently showing for all)
+                    const actionButtons = isSelf ? `
+                        <div class="message-actions">
+                            <button class="message-action-btn edit-message" data-id="${message.id_message}">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="message-action-btn delete-message" data-id="${message.id_message}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    ` : '';
+                    
+                    const messageHtml = `
+                        <div class="message ${messageClass}" data-id="${message.id_message}">
+                            ${actionButtons}
+                            <div class="message-meta">
+                                <strong>${message.nom_user}</strong> • ${formattedDate}
+                            </div>
+                            <div class="message-text">
+                                ${message.raw_message}
+                            </div>
+                        </div>
+                    `;
+                    
+                    $('#messages').append(messageHtml);
+                });
+                
+                // Add event handlers for edit and delete buttons
+                $('.edit-message').off('click').on('click', function() {
+                    const messageId = $(this).data('id');
+                    const messageText = $(this).closest('.message').find('.message-text').text().trim();
+                    openEditMessageModal(messageId, messageText);
+                });
+                
+                $('.delete-message').off('click').on('click', function() {
+                    const messageId = $(this).data('id');
+                    openDeleteConfirmModal('message', messageId, 'Are you sure you want to delete this message?');
+                });
+                
+                // Scroll to bottom
+                const chatWindow = document.getElementById('chat-window');
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            },
+            error: function() {
+                console.error('Error loading messages');
+            }
+        });
+    }
+    
+    // Function to load recent discussions
+    function loadRecentDiscussions() {
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=getDiscussions',
+            method: 'GET',
+            success: function(discussions) {
+                $('#discussions-list').empty();
+                if (discussions.length === 0) {
+                    $('#discussions-list').html('<p class="text-muted">No recent chats found.</p>');
                     return;
                 }
                 
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: data,
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $('#deleteConfirmModal').modal('hide');
-                            
-                            if (itemType === 'message') {
-                                loadMessages();
-                            } else if (itemType === 'discussion') {
-                                // If the current discussion was deleted, go back to the form
-                                if (currentDiscussionId === itemId) {
-                                    currentDiscussionId = null;
-                                    $('#chat-container').hide();
-                                    $('#user-form').show();
-                                    
-                                    if (messagePollingInterval) {
-                                        clearInterval(messagePollingInterval);
-                                        messagePollingInterval = null;
-                                    }
-                                }
-                                loadRecentDiscussions();
-                            }
-                        } else {
-                            alert('Error deleting ' + itemType + ': ' + response.message);
+                discussions.forEach(function(discussion) {
+                    const discussionDate = new Date(discussion.creation_date);
+                    const formattedDate = discussionDate.toLocaleString([], {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    const initials = discussion.nom_user.split(' ').map(word => word[0]).join('').toUpperCase();
+                    
+                    const isActive = discussion.id_dis == currentDiscussionId;
+                    const activeClass = isActive ? 'active bg-light' : '';
+                    
+                    const discussionHtml = `
+                        <div class="discussion-item p-3 mb-2 ${activeClass}" data-id="${discussion.id_dis}">
+                            <div class="discussion-actions">
+                                <button class="discussion-action-btn edit edit-discussion" data-id="${discussion.id_dis}" data-name="${discussion.nom_user}">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="discussion-action-btn delete delete-discussion" data-id="${discussion.id_dis}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar">${initials}</div>
+                                <div class="discussion-info">
+                                    <div class="discussion-name">${discussion.nom_user}</div>
+                                    <div class="discussion-date">${formattedDate}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    $('#discussions-list').append(discussionHtml);
+                });
+                
+                // Add click event for joining existing discussions
+                $('.discussion-item').off('click').on('click', function(e) {
+                    // Only proceed if the click was not on an action button
+                    if (!$(e.target).closest('.discussion-actions').length) {
+                        const discussionId = $(this).data('id');
+                        // Don't reload if already in this discussion
+                        if (currentDiscussionId === discussionId) return;
+                        
+                        currentDiscussionId = discussionId;
+                        
+                        // Set this discussion as active
+                        $('.discussion-item').removeClass('active bg-light');
+                        $(this).addClass('active bg-light');
+                        
+                        // Show chat container
+                        $('#user-form').hide();
+                        $('#chat-container').show();
+                        
+                        // Clear existing interval
+                        if (messagePollingInterval) {
+                            clearInterval(messagePollingInterval);
                         }
-                    },
-                    error: function() {
-                        alert('Error connecting to server');
+                        
+                        // Start polling for messages
+                        loadMessages();
+                        messagePollingInterval = setInterval(loadMessages, 3000);
                     }
                 });
-            });
-            
-            // Function to create stars for the background
-            function createStars() {
-                const starsContainer = document.getElementById('stars');
-                const starCount = 100; // Number of stars
                 
-                for (let i = 0; i < starCount; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    
-                    // Random positioning
-                    const x = Math.random() * 100;
-                    const y = Math.random() * 100;
-                    
-                    // Random size
-                    const size = Math.random() * 3;
-                    
-                    // Random animation delay
-                    const delay = Math.random() * 5;
-                    
-                    star.style.left = `${x}%`;
-                    star.style.top = `${y}%`;
-                    star.style.width = `${size}px`;
-                    star.style.height = `${size}px`;
-                    star.style.animationDelay = `${delay}s`;
-                    
-                    starsContainer.appendChild(star);
-                }
+                // Add event handlers for edit and delete discussion buttons
+                $('.edit-discussion').off('click').on('click', function(e) {
+                    e.stopPropagation(); // Prevent discussion selection
+                    const discussionId = $(this).data('id');
+                    const discussionName = $(this).data('name');
+                    openEditDiscussionModal(discussionId, discussionName);
+                });
+                
+                $('.delete-discussion').off('click').on('click', function(e) {
+                    e.stopPropagation(); // Prevent discussion selection
+                    const discussionId = $(this).data('id');
+                    openDeleteConfirmModal('discussion', discussionId, 'Are you sure you want to delete this chat? All messages will be permanently deleted.');
+                });
+            },
+            error: function() {
+                console.error('Error loading discussions');
             }
-            
-            // Clean up on page unload
-            $(window).on('beforeunload', function() {
-                if (messagePollingInterval) {
-                    clearInterval(messagePollingInterval);
-                }
-            });
         });
+    }
+    
+    // Function to open edit message modal
+    function openEditMessageModal(messageId, messageText) {
+        $('#edit-message-id').val(messageId);
+        $('#edit-message-text').val(messageText);
+        $('#editMessageModal').modal('show');
+    }
+    
+    // Function to open edit discussion modal
+    function openEditDiscussionModal(discussionId, discussionName) {
+        $('#edit-discussion-id').val(discussionId);
+        $('#edit-discussion-name').val(discussionName);
+        $('#editDiscussionModal').modal('show');
+    }
+    
+    // Function to open delete confirmation modal
+    function openDeleteConfirmModal(itemType, itemId, confirmText) {
+        $('#delete-item-type').val(itemType);
+        $('#delete-item-id').val(itemId);
+        $('#delete-confirm-text').text(confirmText);
+        $('#deleteConfirmModal').modal('show');
+    }
+    
+    // Save edited message
+    $('#save-message-edit').click(function() {
+        const messageId = $('#edit-message-id').val();
+        const newText = $('#edit-message-text').val().trim();
+        
+        if (!newText) {
+            alert('Message cannot be empty');
+            return;
+        }
+        
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=updateMessage',
+            method: 'POST',
+            data: {
+                message_id: messageId,
+                new_text: newText
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#editMessageModal').modal('hide');
+                    loadMessages();
+                } else {
+                    alert('Error updating message: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error connecting to server');
+            }
+        });
+    });
+    
+    // Save edited discussion name
+    $('#save-discussion-edit').click(function() {
+        const discussionId = $('#edit-discussion-id').val();
+        const newName = $('#edit-discussion-name').val().trim();
+        
+        if (!newName) {
+            alert('Chat name cannot be empty');
+            return;
+        }
+        
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=updateDiscussionName',
+            method: 'POST',
+            data: {
+                discussion_id: discussionId,
+                new_name: newName
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#editDiscussionModal').modal('hide');
+                    loadRecentDiscussions();
+                    // Also reload messages to update the username in the message headers
+                    if (currentDiscussionId === discussionId) {
+                        loadMessages();
+                    }
+                } else {
+                    alert('Error updating chat name: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error connecting to server');
+            }
+        });
+    });
+    
+    // Confirm delete
+    $('#confirm-delete').click(function() {
+        const itemType = $('#delete-item-type').val();
+        const itemId = $('#delete-item-id').val();
+        
+        let url, data;
+        
+        if (itemType === 'message') {
+            url = '../../controllers/LiveController.php?action=deleteMessage';
+            data = { message_id: itemId };
+        } else if (itemType === 'discussion') {
+            url = '../../controllers/LiveController.php?action=deleteDiscussion';
+            data = { discussion_id: itemId };
+        } else {
+            alert('Invalid item type');
+            return;
+        }
+        
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: data,
+            success: function(response) {
+                if (response.status === 'success') {
+                    $('#deleteConfirmModal').modal('hide');
+                    
+                    if (itemType === 'message') {
+                        loadMessages();
+                    } else if (itemType === 'discussion') {
+                        // If the current discussion was deleted, go back to the form
+                        if (currentDiscussionId === itemId) {
+                            currentDiscussionId = null;
+                            $('#chat-container').hide();
+                            $('#user-form').show();
+                            
+                            if (messagePollingInterval) {
+                                clearInterval(messagePollingInterval);
+                                messagePollingInterval = null;
+                            }
+                        }
+                        loadRecentDiscussions();
+                    }
+                } else {
+                    alert('Error deleting ' + itemType + ': ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error connecting to server');
+            }
+        });
+    });
+    
+    // Function to create stars for the background
+    function createStars() {
+        const starsContainer = document.getElementById('stars');
+        const starCount = 100; // Number of stars
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            
+            // Random positioning
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            
+            // Random size
+            const size = Math.random() * 3;
+            
+            // Random animation delay
+            const delay = Math.random() * 5;
+            
+            star.style.left = `${x}%`;
+            star.style.top = `${y}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.animationDelay = `${delay}s`;
+            
+            starsContainer.appendChild(star);
+        }
+    }
+    
+    // Clean up on page unload
+    $(window).on('beforeunload', function() {
+        if (messagePollingInterval) {
+            clearInterval(messagePollingInterval);
+        }
+    });
+});
     </script>
 </body>
 

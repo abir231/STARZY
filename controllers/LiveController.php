@@ -20,13 +20,28 @@ class LiveController {
     }
     
     public function getDiscussions() {
-    // Use the method that includes message counts
-    $discussions = $this->discussModel->getDiscussionsWithMessageCount();
-    header('Content-Type: application/json');
-    echo json_encode($discussions);}
+        // Use the method that includes message counts
+        $discussions = $this->discussModel->getDiscussionsWithMessageCount();
+        header('Content-Type: application/json');
+        echo json_encode($discussions);
+    }
     
     public function getMessages($discussionId) {
+        // Check if current_user_id was provided (for client comparison)
+        $currentUserId = isset($_GET['current_user_id']) ? filter_input(INPUT_GET, 'current_user_id', FILTER_VALIDATE_INT) : null;
+        
         $messages = $this->messageModel->getMessagesByDiscussionId($discussionId);
+        
+        // Add the current user flag to each message for client-side comparison
+        if ($currentUserId) {
+            foreach ($messages as &$message) {
+                // Add user_id if not present (should be added by model)
+                if (!isset($message['user_id'])) {
+                    $message['user_id'] = $currentUserId; // Temporarily mark all as current user's messages
+                }
+            }
+        }
+        
         header('Content-Type: application/json');
         echo json_encode($messages);
     }
@@ -107,6 +122,7 @@ class LiveController {
             // Validate and sanitize input
             $discussionId = filter_input(INPUT_POST, 'discussion_id', FILTER_VALIDATE_INT);
             $rawMessage = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+            $userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
             
             if (!$discussionId || !$rawMessage) {
                 header('Content-Type: application/json');
@@ -114,13 +130,19 @@ class LiveController {
                 return;
             }
             
-            $messageId = $this->messageModel->createMessage($discussionId, $rawMessage);
+            // Pass the user_id to createMessage (even if null)
+            $messageId = $this->messageModel->createMessage($discussionId, $rawMessage, $userId);
             
             if ($messageId) {
                 // Get the newly created message with user info
                 $message = $this->messageModel->getMessageById($messageId);
                 $discussion = $this->discussModel->getDiscussionById($discussionId);
                 $message['nom_user'] = $discussion['nom_user'];
+                
+                // Add user_id to identify message ownership (if not already in message)
+                if (!isset($message['user_id']) && $userId) {
+                    $message['user_id'] = $userId;
+                }
                 
                 header('Content-Type: application/json');
                 echo json_encode(['status' => 'success', 'message' => $message]);

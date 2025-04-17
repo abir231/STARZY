@@ -13,7 +13,8 @@ class MessageModel {
     
     public function getMessagesByDiscussionId($discussionId) {
         try {
-            $query = "SELECT m.*, d.nom_user 
+            // Modified query to include user_id from discuss table
+            $query = "SELECT m.*, d.nom_user, d.user_id 
                      FROM messages m 
                      INNER JOIN discuss d ON m.discussion_id = d.id_dis 
                      WHERE m.discussion_id = :discussion_id 
@@ -30,7 +31,11 @@ class MessageModel {
     
     public function getMessageById($messageId) {
         try {
-            $query = "SELECT * FROM messages WHERE id_message = :message_id";
+            // Modified to join with discuss to get user_id
+            $query = "SELECT m.*, d.user_id 
+                     FROM messages m 
+                     INNER JOIN discuss d ON m.discussion_id = d.id_dis 
+                     WHERE m.id_message = :message_id";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':message_id', $messageId, PDO::PARAM_INT);
             $stmt->execute();
@@ -41,12 +46,36 @@ class MessageModel {
         }
     }
     
-    public function createMessage($discussionId, $rawMessage) {
+    /**
+     * Create a new message
+     * 
+     * @param int $discussionId The discussion ID
+     * @param string $rawMessage The message content
+     * @param int|null $userId Optional user ID for tracking message ownership
+     * @return int|bool The new message ID or false on failure
+     */
+    public function createMessage($discussionId, $rawMessage, $userId = null) {
         try {
-            $query = "INSERT INTO messages (discussion_id, raw_message) VALUES (:discussion_id, :raw_message)";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':discussion_id', $discussionId, PDO::PARAM_INT);
-            $stmt->bindParam(':raw_message', $rawMessage, PDO::PARAM_STR);
+            // Check if the messages table has a user_id column
+            // If not, use the original query
+            $hasUserIdColumn = $this->checkIfColumnExists('messages', 'user_id');
+            
+            if ($hasUserIdColumn && $userId) {
+                $query = "INSERT INTO messages (discussion_id, raw_message, date_envoi, user_id) 
+                         VALUES (:discussion_id, :raw_message, NOW(), :user_id)";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':discussion_id', $discussionId, PDO::PARAM_INT);
+                $stmt->bindParam(':raw_message', $rawMessage, PDO::PARAM_STR);
+                $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            } else {
+                // Original query without user_id
+                $query = "INSERT INTO messages (discussion_id, raw_message, date_envoi) 
+                         VALUES (:discussion_id, :raw_message, NOW())";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':discussion_id', $discussionId, PDO::PARAM_INT);
+                $stmt->bindParam(':raw_message', $rawMessage, PDO::PARAM_STR);
+            }
+            
             $stmt->execute();
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
@@ -119,6 +148,27 @@ class MessageModel {
         } catch (PDOException $e) {
             error_log('MessageModel::getRecentMessagesCount - ' . $e->getMessage());
             return 0;
+        }
+    }
+    
+    /**
+     * Helper method to check if a column exists in a table
+     *
+     * @param string $table Table name
+     * @param string $column Column name
+     * @return bool True if column exists, false otherwise
+     */
+    private function checkIfColumnExists($table, $column) {
+        try {
+            $query = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = :table AND COLUMN_NAME = :column";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':table', $table, PDO::PARAM_STR);
+            $stmt->bindParam(':column', $column, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log('MessageModel::checkIfColumnExists - ' . $e->getMessage());
+            return false;
         }
     }
 }
