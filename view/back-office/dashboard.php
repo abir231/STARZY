@@ -15,7 +15,7 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #121212;
+            background-color: #0f0c29;
             color: white;
             display: flex;
         }
@@ -23,7 +23,7 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         .sidebar {
             width: 240px;
             height: 100vh;
-            background-color: #1f1f1f;
+            background-color: #0f0c29;
             padding-top: 30px;
             position: fixed;
             left: 0;
@@ -45,7 +45,7 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         }
 
         .sidebar a:hover {
-            background-color: #333;
+            background-color: #1a237e;
         }
 
         .main-content {
@@ -76,7 +76,7 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             margin-top: 40px;
             border-collapse: collapse;
-            background-color: #1e1e1e;
+            background-color: #1a237e;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
             border-radius: 10px;
             overflow: hidden;

@@ -11,7 +11,11 @@ $selectedEventId = isset($_GET['event_id']) ? intval($_GET['event_id']) : null;
 $participants = [];
 
 if ($selectedEventId) {
-    $stmt = $pdo->prepare("SELECT u.nom_user, u.email, t.prix_ticket FROM ticket t JOIN users u ON t.user_id = u.user_id WHERE t.event_id = ?");
+  $stmt = $pdo->prepare("SELECT u.nom_user, u.email, e.prix 
+  FROM ticket t 
+  JOIN users u ON t.user_id = u.user_id 
+  JOIN evenements e ON t.event_id = e.event_id 
+  WHERE t.event_id = ?");
     $stmt->execute([$selectedEventId]);
     $participants = $stmt->fetchAll();
 }
@@ -32,7 +36,7 @@ if ($selectedEventId) {
     }
     .sidebar {
             width: 250px;
-            background-color: #1f1f1f;
+            background-color: #0f0c29;
             padding: 20px;
             min-height: 100vh;
             color: white;
@@ -52,18 +56,18 @@ if ($selectedEventId) {
         }
 
         .sidebar a:hover {
-            background-color: #333;
+            background-color: #1a237e;
         }
     .main {
       flex-grow: 1;
-      background-color: #f8f9fa;
+      background-color: white;
       padding: 30px;
     }
     .box {
-      background: white;
+      background: #1a237e;
       border-radius: 10px;
       padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px #1a237e;
     }
   </style>
 </head>
@@ -110,7 +114,7 @@ if ($selectedEventId) {
             <tr>
               <td><?= htmlspecialchars($participant['nom_user']) ?></td>
               <td><?= htmlspecialchars($participant['email']) ?></td>
-              <td><?= htmlspecialchars($participant['prix_ticket']) ?></td>
+              <td><?= htmlspecialchars($participant['prix']) ?></td>
             </tr>
           <?php endforeach; ?>
         </tbody>

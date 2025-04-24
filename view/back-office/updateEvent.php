@@ -16,8 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
     $date = $_POST['date_event'];
     $lieu = $_POST['location_event'];
     $desc = $_POST['description'];
-    $img = $_POST['image'];
-    if (Event::updateEvent($event_id, $nom, $date, $lieu, $desc,$img)) {
+    $prix = $_POST['prix'];
+    $img = $_POST['image'] ?? ''; // champ image facultatif ici
+
+    if (Event::update($event_id, $nom, $date, $lieu, $desc, $img, $prix)) {
         header('Location: dashboard.php?update=success');
         exit();
     } else {
@@ -25,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -77,6 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
         button:hover {
             opacity: 0.9;
         }
+
+        .error {
+            color: #ff7675;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -84,20 +91,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
 <div class="form-container">
     <h2>Modifier l'événement</h2>
     <?php if ($event): ?>
-    <form method="POST">
+    <form method="POST" onsubmit="return validateForm();">
         <input type="hidden" name="event_id" value="<?= $event['event_id'] ?>">
 
         <label for="nom_event">Nom :</label>
-        <input type="text" name="nom_event" id="nom_event" value="<?= $event['nom_event'] ?>" required>
+        <input type="text" name="nom_event" id="nom_event" value="<?= htmlspecialchars($event['nom_event']) ?>" required>
 
         <label for="date_event">Date :</label>
         <input type="date" name="date_event" id="date_event" value="<?= $event['date_event'] ?>" required>
 
         <label for="location_event">Lieu :</label>
-        <input type="text" name="location_event" id="location_event" value="<?= $event['location_event'] ?>" required>
+        <input type="text" name="location_event" id="location_event" value="<?= htmlspecialchars($event['location_event']) ?>" required>
 
         <label for="description">Description :</label>
-        <textarea name="description" id="description" required><?= $event['description'] ?></textarea>
+        <textarea name="description" id="description" required><?= htmlspecialchars($event['description']) ?></textarea>
+
+        <label for="prix">Prix (€) :</label>
+        <input type="number" name="prix" id="prix" min="0" step="0.01" value="<?= $event['prix'] ?>" required>
+
+        <input type="hidden" name="image" value="<?= $event['image'] ?>">
+
+        <div id="errorMessage" class="error"></div>
 
         <button type="submit">Mettre à jour</button>
         <a href="dashboard.php"><button type="button" class="cancel-btn">Annuler</button></a>
@@ -106,6 +120,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
         <p>Événement introuvable.</p>
     <?php endif; ?>
 </div>
+
+<script>
+function validateForm() {
+    const nom = document.getElementById("nom_event").value.trim();
+    const date = document.getElementById("date_event").value;
+    const lieu = document.getElementById("location_event").value.trim();
+    const desc = document.getElementById("description").value.trim();
+    const prix = parseFloat(document.getElementById("prix").value);
+    const errorMessage = document.getElementById("errorMessage");
+
+    const today = new Date();
+    const eventDate = new Date(date);
+
+    if (!nom || !date || !lieu || !desc || isNaN(prix)) {
+        errorMessage.textContent = "Tous les champs sont obligatoires.";
+        return false;
+    }
+
+    if (eventDate <= today) {
+        errorMessage.textContent = "La date de l'événement doit être postérieure à aujourd'hui.";
+        return false;
+    }
+
+    if (prix <= 0) {
+        errorMessage.textContent = "Le prix doit être strictement positif.";
+        return false;
+    }
+
+    errorMessage.textContent = "";
+    return true;
+}
+</script>
 
 </body>
 </html>

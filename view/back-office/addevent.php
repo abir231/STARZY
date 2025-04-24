@@ -2,24 +2,31 @@
 require_once '../../model/Config.php';
 require_once '../../model/Event.php';
 require_once '../../controller/eventController.php';
+
+$error = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = $_POST['nom_event'];
+    $nom = trim($_POST['nom_event']);
     $date = $_POST['date_event'];
-    $lieu = $_POST['location_event'];
-    $desc = $_POST['description'];
+    $lieu = trim($_POST['location_event']);
+    $desc = trim($_POST['description']);
+    $prix = floatval($_POST['prix']);
     $image = $_FILES['image']['name'];
 
-    // Sauvegarde de l'image
-    if (!empty($image)) {
+    if (empty($nom) || empty($date) || empty($lieu) || empty($desc) || empty($image) || $prix <= 0) {
+        $error = "Tous les champs sont obligatoires et le prix doit être strictement positif.";
+    } elseif (strtotime($date) <= time()) {
+        $error = "La date de l'événement doit être dans le futur.";
+    } else {
         $target = "../../uploads/" . basename($image);
         move_uploaded_file($_FILES['image']['tmp_name'], $target);
-    }
 
-    if (Event::addEvent($nom, $date, $lieu, $desc, $image)) {
-        header('Location: dashboard.php?added=1');
-        exit();
-    } else {
-        $error = "Erreur lors de l'ajout.";
+        if (Event::addEvent($nom, $date, $lieu, $desc, $image, $prix)) {
+            header('Location: dashboard.php?added=1');
+            exit();
+        } else {
+            $error = "Erreur lors de l'ajout de l'événement.";
+        }
     }
 }
 ?>
@@ -75,13 +82,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         button:hover {
             opacity: 0.9;
         }
+
+        .error {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
 
 <div class="form-container">
     <h2>Ajouter un événement</h2>
-    <form method="POST" enctype="multipart/form-data">
+
+    <?php if (!empty($error)): ?>
+        <div class="error"><?= $error ?></div>
+    <?php endif; ?>
+
+    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm();">
         <label for="nom_event">Nom :</label>
         <input type="text" name="nom_event" id="nom_event" required>
 
@@ -94,6 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="description">Description :</label>
         <textarea name="description" id="description" required></textarea>
 
+        <label for="prix">Prix (€) :</label>
+        <input type="number" step="0.01" name="prix" id="prix" required>
+
         <label for="image">Image :</label>
         <input type="file" name="image" id="image" accept="image/*" required>
 
@@ -101,6 +124,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="dashboard.php"><button type="button" class="cancel-btn">Annuler</button></a>
     </form>
 </div>
+
+<script>
+    function validateForm() {
+        const nom = document.getElementById("nom_event").value.trim();
+        const date = document.getElementById("date_event").value;
+        const lieu = document.getElementById("location_event").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const prix = parseFloat(document.getElementById("prix").value);
+        const today = new Date();
+        const eventDate = new Date(date);
+
+        if (!nom || !date || !lieu || !description || isNaN(prix)) {
+            alert("Tous les champs sont obligatoires.");
+            return false;
+        }
+
+        if (prix <= 0) {
+            alert("Le prix doit être strictement positif.");
+            return false;
+        }
+
+        if (eventDate <= today) {
+            alert("La date de l'événement doit être ultérieure à aujourd'hui.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 </body>
 </html>

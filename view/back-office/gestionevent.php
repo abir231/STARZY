@@ -3,7 +3,7 @@ require_once '../../model/Config.php';
 $pdo = Config::getConnection(); // <--- C'est ça qui manquait !
 
 // Récupération des revenus par événement
-$query = "SELECT e.nom_event, SUM(t.prix_ticket) AS total_revenue
+$query = "SELECT e.nom_event, SUM(e.prix) AS total_revenue
           FROM ticket t
           JOIN evenements e ON t.event_id = e.event_id
           GROUP BY e.nom_event";
@@ -36,13 +36,13 @@ body {
     margin-left: 270px;
     padding: 30px;
     flex-grow: 1;
-    background-color: #f4f4f4;
+    background-color: #0f0c29;
     min-height: 100vh;
 }
 .sidebar {
             width: 240px;
             height: 100vh;
-            background-color: #1f1f1f;
+            background-color: #0f0c29;
             padding-top: 30px;
             position: fixed;
             left: 0;
@@ -68,6 +68,7 @@ body {
         }
 h1 {
     margin-bottom: 20px;
+    color: white;
 }
 </style>
 
