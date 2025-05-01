@@ -39,6 +39,107 @@ require_once __DIR__ . '/../config.php';
     <link href="../css/responsive.css" rel="stylesheet" />
 
     <style>
+
+
+/* Modern Message reaction styles */
+.message-reactions {
+    display: flex;
+    margin-top: 8px;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.reaction-button {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    color: #6c757d;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for user messages */
+.message-user .reaction-button {
+    background: rgba(240, 240, 240, 0.5);
+}
+
+/* Style for self messages */
+.message-self .reaction-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.reaction-button:hover {
+    transform: translateY(-2px);
+    background: rgba(147, 112, 219, 0.2);
+    color: #9370DB;
+}
+
+.message-self .reaction-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.reaction-button.active {
+    background: rgba(147, 112, 219, 0.3);
+    color: #9370DB;
+    font-weight: 500;
+    transform: scale(1.05);
+}
+
+.message-self .reaction-button.active {
+    background: rgba(255, 255, 255, 0.4);
+    color: white;
+    font-weight: 500;
+}
+
+.reaction-button i {
+    margin-right: 5px;
+    font-size: 15px;
+}
+
+.reaction-count {
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 15px;
+    text-align: center;
+}
+
+/* TTS button style */
+.tts-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    color: #6c757d;
+}
+
+.message-self .tts-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tts-button:hover {
+    background: rgba(147, 112, 219, 0.2);
+    color: #9370DB;
+    transform: scale(1.1);
+}
+
+.message-self .tts-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
 body {
     background: url('../images/galaxy.jpg') no-repeat center center fixed;
     background-size: cover;
@@ -350,6 +451,7 @@ body {
     display: flex;
     gap: 10px;
     margin-top: 15px;
+    position: relative;
 }
 
 #message {
@@ -440,6 +542,246 @@ body {
 	color:black;
 }
 #delete-confirm-text {color:black;}
+
+/* Emoji picker styles */
+.emoji-button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 10px;
+    transition: transform 0.2s;
+    height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+.emoji-button:hover {
+    transform: scale(1.2);
+}
+
+.emoji-picker {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 300px;
+    height: 250px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    display: none;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.emoji-picker.show {
+    display: block;
+}
+
+.emoji-categories {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.emoji-category {
+    cursor: pointer;
+    padding: 5px;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+}
+
+.emoji-category.active {
+    color: #9370DB;
+}
+
+.emoji-category:hover {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.emoji-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+}
+
+.emoji {
+    cursor: pointer;
+    padding: 5px;
+    text-align: center;
+    font-size: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.emoji:hover {
+    transform: scale(1.2);
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+/* Voice message styles */
+.voice-record-button {
+    background: none;
+    border: none;
+    color: #9370DB;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.2s;
+    position: relative;
+    height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+.voice-record-button:hover {
+    transform: scale(1.1);
+}
+
+.voice-record-button.recording {
+    color: #dc3545;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.voice-record-timer {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    font-size: 12px;
+    color: #dc3545;
+    display: none;
+}
+
+.voice-record-timer.show {
+    display: block;
+}
+
+.input-group-prepend.message-input-buttons {
+    display: flex;
+    align-items: center;
+    height: 38px;
+}
+
+/* Enhanced audio player styling */
+.audio-message {
+    width: 100%;
+    height: 40px;
+    margin-top: 5px;
+    outline: none;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* For self messages */
+.message-self .audio-message {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Improved audio controls */
+audio::-webkit-media-controls-panel {
+    background-color: rgba(147, 112, 219, 0.2);
+}
+
+audio::-webkit-media-controls-play-button {
+    background-color: rgba(147, 112, 219, 0.4);
+    border-radius: 50%;
+}
+
+/* Message reaction styles */
+.message-reactions {
+    display: flex;
+    margin-top: 5px;
+    justify-content: flex-end;
+}
+
+.reaction-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 2px 5px;
+    border-radius: 15px;
+    font-size: 14px;
+    transition: all 0.2s;
+    color: #6c757d;
+}
+
+.reaction-button:hover {
+    background-color: rgba(147, 112, 219, 0.1);
+}
+
+.reaction-button.active {
+    background-color: rgba(147, 112, 219, 0.2);
+    color: #9370DB;
+}
+
+.reaction-button i {
+    margin-right: 3px;
+}
+
+.reaction-count {
+    font-size: 12px;
+}
+
+/* TTS button style */
+.tts-button {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 2px 5px;
+    border-radius: 15px;
+}
+
+.tts-button:hover {
+    color: #9370DB;
+    background-color: rgba(147, 112, 219, 0.1);
+}
+
+/* Search styles */
+#search-discussions {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.search-no-result {
+    font-style: italic;
+    color: #6c757d;
+    text-align: center;
+    padding: 10px;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.btn-primary.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
     </style>
 </head>
 
@@ -583,8 +925,36 @@ body {
                             </div>
                             <div id="chat-input">
                                 <div id="message-input-container">
-                                    <input type="text" id="message" class="form-control" placeholder="Type your message...">
-                                    <button class="btn btn-primary" id="send-button"><i class="fa fa-paper-plane"></i></button>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend message-input-buttons">
+                                            <button class="emoji-button" id="emoji-button" title="Add emoji">
+                                                <i class="fa fa-smile-o"></i>
+                                            </button>
+                                            <button class="voice-record-button" id="voice-record-button" title="Record voice message">
+                                                <i class="fa fa-microphone"></i>
+                                                <span class="voice-record-timer" id="voice-record-timer">0:00</span>
+                                            </button>
+                                        </div>
+                                        <input type="text" id="message" class="form-control" placeholder="Type your message...">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" id="send-button"><i class="fa fa-paper-plane"></i></button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Emoji picker -->
+                                    <div class="emoji-picker" id="emoji-picker">
+                                        <div class="emoji-categories">
+                                            <div class="emoji-category active" data-category="smileys">😀</div>
+                                            <div class="emoji-category" data-category="people">👨</div>
+                                            <div class="emoji-category" data-category="animals">🐶</div>
+                                            <div class="emoji-category" data-category="food">🍎</div>
+                                            <div class="emoji-category" data-category="travel">🚗</div>
+                                            <div class="emoji-category" data-category="activities">⚽</div>
+                                            <div class="emoji-category" data-category="objects">💡</div>
+                                            <div class="emoji-category" data-category="symbols">❤️</div>
+                                        </div>
+                                        <div class="emoji-container" id="emoji-container"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -593,6 +963,17 @@ body {
                     <div class="chat-sidebar">
                         <div id="recent-discussions" class="mb-4">
                             <h4><i class="fa fa-comments"></i> Recent Chats</h4>
+                            
+                            <!-- Search input for discussions -->
+                            <div class="input-group mb-3" id="search-discussions">
+                                <input type="text" class="form-control" id="discussion-search-input" placeholder="Search discussions...">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            
                             <div id="discussions-list">
                                 <!-- Discussion items will be loaded here dynamically -->
                             </div>
@@ -764,13 +1145,48 @@ body {
     let currentUserId = Math.floor(Math.random() * 10000); // Simulating user ID
     let messagePollingInterval = null;
     
+    // Global variables for new features
+    let isRecording = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let recordingTimer = null;
+    let recordingDuration = 0;
+    let speechSynthesis = window.speechSynthesis;
+    
     // Create stars for the background animation
     createStars();
+    
+    // Initialize emoji picker
+    initEmojiPicker();
     
     // Load recent discussions when page loads
     loadRecentDiscussions();
     // Refresh discussions periodically
     setInterval(loadRecentDiscussions, 10000);
+    
+    // Toggle emoji picker
+    $('#emoji-button').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#emoji-picker').toggleClass('show');
+    });
+    
+    // Close emoji picker when clicking outside
+    $(document).click(function(e) {
+        if (!$(e.target).closest('#emoji-picker, #emoji-button').length) {
+            $('#emoji-picker').removeClass('show');
+        }
+    });
+    
+    // Initialize voice recording
+    $('#voice-record-button').click(function(e) {
+        e.preventDefault();
+        if (!isRecording) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    });
     
     // Start new chat button
     $('#new-chat-btn').click(function() {
@@ -829,6 +1245,34 @@ body {
         });
     });
     
+    // Add discussion search functionality
+    $('#discussion-search-input').on('input', function() {
+        const searchTerm = $(this).val().toLowerCase().trim();
+        if (searchTerm === '') {
+            $('.discussion-item').show();
+            $('.search-no-result').remove();
+            return;
+        }
+        
+        let hasVisibleItems = false;
+        $('.discussion-item').each(function() {
+            const discussionName = $(this).find('.discussion-name').text().toLowerCase();
+            if (discussionName.includes(searchTerm)) {
+                $(this).show();
+                hasVisibleItems = true;
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        // Show "no results" message if needed
+        if ($('.search-no-result').length === 0 && !hasVisibleItems) {
+            $('#discussions-list').append('<div class="search-no-result">No discussions found</div>');
+        } else if (hasVisibleItems) {
+            $('.search-no-result').remove();
+        }
+    });
+    
     // Send message button click
     $('#send-button').click(sendMessage);
     
@@ -839,40 +1283,65 @@ body {
         }
     });
     
-    // Function to send a message
+    // Empty check for message sending with visual feedback
+    $('#message').on('keyup', function() {
+        if ($(this).val().trim() === '') {
+            $('#send-button').addClass('disabled');
+        } else {
+            $('#send-button').removeClass('disabled');
+        }
+    });
+    
+    // Enhanced function to send a message
     function sendMessage() {
         const messageText = $('#message').val().trim();
-        if (messageText === '' || !currentDiscussionId) {
+        if (messageText === '' && !audioChunks.length && !currentDiscussionId) {
+            // If message is empty and no audio is recorded, do nothing
             return;
         }
         
-        $.ajax({
-            url: '../../controllers/LiveController.php?action=sendMessage',
-            method: 'POST',
-            data: {
-                discussion_id: currentDiscussionId,
-                message: messageText,
-                user_id: currentUserId  // Include current user ID
-            },
-            success: function(response) {
-                if (response.status === 'success') {
-                    // Clear input field
-                    $('#message').val('');
-                    // Load the new message
-                    loadMessages();
-                    // Refresh discussions list to show most recent activity
-                    loadRecentDiscussions();
-                } else {
-                    alert('Error sending message: ' + response.message);
-                }
-            },
-            error: function() {
-                alert('Error connecting to server');
+        if (currentDiscussionId) {
+            if (audioChunks.length > 0) {
+                // Send voice message
+                sendVoiceMessage();
+            } else if (messageText !== '') {
+                // Send text message
+                $.ajax({
+                    url: '../../controllers/LiveController.php?action=sendMessage',
+                    method: 'POST',
+                    data: {
+                        discussion_id: currentDiscussionId,
+                        message: messageText,
+                        user_id: currentUserId  // Include current user ID
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Clear input field
+                            $('#message').val('');
+                            // Load the new message
+                            loadMessages();
+                            // Refresh discussions list to show most recent activity
+                            loadRecentDiscussions();
+                        } else {
+                            alert('Error sending message: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error connecting to server');
+                    }
+                });
+            } else {
+                // Alert for empty message
+                const messageInput = $('#message');
+                messageInput.addClass('is-invalid');
+                setTimeout(function() {
+                    messageInput.removeClass('is-invalid');
+                }, 2000);
             }
-        });
+        }
     }
     
-    // Function to load messages
+    // Function to load messages with reactions and TTS buttons
     function loadMessages() {
         if (!currentDiscussionId) return;
         
@@ -886,13 +1355,10 @@ body {
             success: function(messages) {
                 $('#messages').empty();
                 
-                // Debug: Log current user ID
-                console.log("Current User ID:", currentUserId);
+                // Restore audio elements from session storage
+                restoreAudioElements();
                 
                 messages.forEach(function(message) {
-                    // Debug: Log message user ID for comparison
-                    console.log("Message ID:", message.id_message, "User ID:", message.user_id);
-                    
                     // For testing: force all messages to be "self" messages
                     // In production, uncomment the real check below
                     const isSelf = true; // message.user_id == currentUserId;
@@ -904,6 +1370,15 @@ body {
                         hour: '2-digit',
                         minute: '2-digit'
                     });
+                    
+                    // Get reaction counts
+                    const likeCount = message.reactions ? message.reactions.like : 0;
+                    const dislikeCount = message.reactions ? message.reactions.dislike : 0;
+                    
+                    // Get user reaction if any
+                    const userReaction = message.user_reaction;
+                    const likeActive = userReaction === 'like' ? 'active' : '';
+                    const dislikeActive = userReaction === 'dislike' ? 'active' : '';
                     
                     // Only show edit/delete buttons for own messages (currently showing for all)
                     const actionButtons = isSelf ? `
@@ -917,6 +1392,24 @@ body {
                         </div>
                     ` : '';
                     
+                    // Check if message contains audio
+                    const hasAudio = message.raw_message.includes('<audio');
+                    
+                    // Add reaction buttons and text-to-speech button
+                    const reactionButtons = `
+                        <div class="message-reactions">
+                            <button class="reaction-button like-button ${likeActive}" data-id="${message.id_message}">
+                                <i class="fa fa-thumbs-up"></i> <span class="reaction-count">${likeCount}</span>
+                            </button>
+                            <button class="reaction-button dislike-button ${dislikeActive}" data-id="${message.id_message}">
+                                <i class="fa fa-thumbs-down"></i> <span class="reaction-count">${dislikeCount}</span>
+                            </button>
+                            ${!hasAudio ? `<button class="tts-button" data-id="${message.id_message}" title="Listen to this message">
+                                <i class="fa fa-volume-up"></i>
+                            </button>` : ''}
+                        </div>
+                    `;
+                    
                     const messageHtml = `
                         <div class="message ${messageClass}" data-id="${message.id_message}">
                             ${actionButtons}
@@ -926,6 +1419,7 @@ body {
                             <div class="message-text">
                                 ${message.raw_message}
                             </div>
+                            ${reactionButtons}
                         </div>
                     `;
                     
@@ -944,6 +1438,79 @@ body {
                     openDeleteConfirmModal('message', messageId, 'Are you sure you want to delete this message?');
                 });
                 
+                // Updated reaction handler
+                $('.like-button, .dislike-button').off('click').on('click', function() {
+                    const messageId = $(this).data('id');
+                    const isLike = $(this).hasClass('like-button');
+                    const button = $(this);
+                    
+                    // Toggle active state
+                    if (button.hasClass('active')) {
+                        // Remove reaction
+                        $.ajax({
+                            url: '../../controllers/LiveController.php?action=removeReaction',
+                            method: 'POST',
+                            data: {
+                                message_id: messageId,
+                                user_id: currentUserId
+                            },
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    button.removeClass('active');
+                                    let count = parseInt(button.find('.reaction-count').text()) - 1;
+                                    button.find('.reaction-count').text(count > 0 ? count : 0);
+                                }
+                            }
+                        });
+                    } else {
+                        // Add reaction
+                        $.ajax({
+                            url: '../../controllers/LiveController.php?action=addReaction',
+                            method: 'POST',
+                            data: {
+                                message_id: messageId,
+                                user_id: currentUserId,
+                                reaction_type: isLike ? 'like' : 'dislike'
+                            },
+                            success: function(response) {
+                                if (response.status === 'success') {
+                                    button.addClass('active');
+                                    button.find('.reaction-count').text(parseInt(button.find('.reaction-count').text()) + 1);
+                                    
+                                    // Remove active state from other button
+                                    const otherButton = isLike ? 
+                                        button.siblings('.dislike-button') : 
+                                        button.siblings('.like-button');
+                                    
+                                    if (otherButton.hasClass('active')) {
+                                        otherButton.removeClass('active');
+                                        let count = parseInt(otherButton.find('.reaction-count').text()) - 1;
+                                        otherButton.find('.reaction-count').text(count > 0 ? count : 0);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+                
+                // Add event handlers for text-to-speech
+                $('.tts-button').off('click').on('click', function() {
+                    const messageId = $(this).data('id');
+                    const messageText = $(this).closest('.message').find('.message-text').text().trim();
+                    
+                    // Use the browser's speech synthesis API
+                    if (speechSynthesis) {
+                        // Cancel any ongoing speech
+                        speechSynthesis.cancel();
+                        
+                        const utterance = new SpeechSynthesisUtterance(messageText);
+                        utterance.lang = 'en-US';
+                        speechSynthesis.speak(utterance);
+                    } else {
+                        alert('Your browser does not support text-to-speech.');
+                    }
+                });
+                
                 // Scroll to bottom
                 const chatWindow = document.getElementById('chat-window');
                 chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -952,6 +1519,20 @@ body {
                 console.error('Error loading messages');
             }
         });
+    }
+    
+    // Function to restore audio elements from session storage
+    function restoreAudioElements() {
+        setTimeout(function() {
+            $('audio').each(function() {
+                const audioKey = $(this).data('key');
+                if (audioKey && sessionStorage.getItem(audioKey)) {
+                    const audioUrl = sessionStorage.getItem(audioKey);
+                    $(this).find('source').attr('src', audioUrl);
+                    this.load(); // Reload the audio element to use the new source
+                }
+            });
+        }, 500);
     }
     
     // Function to load recent discussions
@@ -1045,6 +1626,12 @@ body {
                     const discussionId = $(this).data('id');
                     openDeleteConfirmModal('discussion', discussionId, 'Are you sure you want to delete this chat? All messages will be permanently deleted.');
                 });
+                
+                // Reapply search filter if it was active
+                const searchTerm = $('#discussion-search-input').val().trim();
+                if (searchTerm !== '') {
+                    $('#discussion-search-input').trigger('input');
+                }
             },
             error: function() {
                 console.error('Error loading discussions');
@@ -1191,6 +1778,148 @@ body {
             }
         });
     });
+    
+    // Initialize emoji picker
+    function initEmojiPicker() {
+        const emojis = {
+            'smileys': ['😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '😗', '😙', '😚', '🙂', '🤔', '😐', '😑', '😶', '🙄', '😏', '😣', '😥', '😮', '🤐', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '🤤', '😒', '😓', '😔', '😕', '🙃', '🤑', '😲', '☹️', '🙁', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😩', '😬', '😰', '😱', '😳', '😵', '😡', '😠', '😷', '🤒', '🤕', '🤢', '🤧', '😇', '🤠', '🤡', '🤥', '🤓', '😈', '👿', '👹', '👺', '💀', '👻', '👽', '🤖', '💩', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾'],
+            'people': ['👶', '👦', '👧', '👨', '👩', '👴', '👵', '👲', '👳‍♀️', '👳‍♂️', '👮‍♀️', '👮‍♂️', '👷‍♀️', '👷‍♂️', '💂‍♀️', '💂‍♂️', '🕵️‍♀️', '🕵️‍♂️', '👩‍⚕️', '👨‍⚕️', '👩‍🌾', '👨‍🌾', '👩‍🍳', '👨‍🍳', '👩‍🎓', '👨‍🎓', '👩‍🎤', '👨‍🎤', '👩‍🏫', '👨‍🏫', '👩‍🏭', '👨‍🏭', '👩‍💻', '👨‍💻', '👩‍💼', '👨‍💼', '👩‍🔧', '👨‍🔧', '👩‍🔬', '👨‍🔬', '👩‍🎨', '👨‍🎨', '👩‍🚒', '👨‍🚒', '👩‍✈️', '👨‍✈️', '👩‍🚀', '👨‍🚀', '👩‍⚖️', '👨‍⚖️', '🤶', '🎅', '👸', '🤴', '👰', '🤵', '👼', '🤰', '🙇‍♀️', '🙇‍♂️', '💁‍♀️', '💁‍♂️', '🙅‍♀️', '🙅‍♂️', '🙆‍♀️', '🙆‍♂️', '🙋‍♀️', '🙋‍♂️', '🤦‍♀️', '🤦‍♂️', '🤷‍♀️', '🤷‍♂️', '💆‍♀️', '💆‍♂️', '💇‍♀️', '💇‍♂️', '🚶‍♀️', '🚶‍♂️', '🏃‍♀️', '🏃‍♂️', '💃', '🕺', '👯‍♀️', '👯‍♂️', '🕴', '🗣', '👤', '👥', '👫', '👬', '👭', '💏', '💑', '👪', '👨‍👩‍👧', '👨‍👩‍👧‍👦', '👨‍👩‍👦‍👦', '👨‍👩‍👧‍👧', '👨‍👨‍👦', '👨‍👨‍👧', '👨‍👨‍👧‍👦', '👨‍👨‍👦‍👦', '👨‍👨‍👧‍👧', '👩‍👩‍👦', '👩‍👩‍👧', '👩‍👩‍👧‍👦', '👩‍👩‍👦‍👦', '👩‍👩‍👧‍👧', '👨‍👦', '👨‍👦‍👦', '👨‍👧', '👨‍👧‍👦', '👨‍👧‍👧', '👩‍👦', '👩‍👦‍👦', '👩‍👧', '👩‍👧‍👦', '👩‍👧‍👧'],
+            'animals': ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐚', '🐞', '🐜', '🕷', '🕸', '🐢', '🐍', '🦎', '🦂', '🦀', '🦑', '🐙', '🦐', '🐠', '🐟', '🐡', '🐬', '🦈', '🐳', '🐋', '🐊', '🐆', '🐅', '🐃', '🐂', '🐄', '🦌', '🐪', '🐫', '🐘', '🦏', '🦍', '🐎', '🐖', '🐐', '🐏', '🐑', '🐕', '🐩', '🐈', '🐓', '🦃', '🕊', '🐇', '🐁', '🐀', '🐿', '🐾', '🐉', '🐲', '🌵', '🎄', '🌲', '🌳', '🌴', '🌱', '🌿', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🌾', '💐', '🌷', '🌹', '🥀', '🌻', '🌼', '🌸', '🌺', '🌎', '🌍', '🌏', '🌕', '🌖', '🌗', '🌘', '🌑', '🌒', '🌓', '🌔', '🌚', '🌝', '🌞', '🌛', '🌜', '🌙', '💫', '⭐️', '🌟', '✨', '⚡️', '🔥', '💥', '☄', '☀️', '🌤', '⛅️', '🌥', '🌦', '🌈', '☁️', '🌧', '⛈', '🌩', '🌨', '☃️', '⛄️', '❄️', '🌬', '💨', '🌪', '🌫', '🌊', '💧', '💦', '☔️'],
+            'food': ['🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🍍', '🥝', '🥑', '🍅', '🍆', '🥒', '🥕', '🌽', '🌶', '🥔', '🍠', '🌰', '🥜', '🍯', '🥐', '🍞', '🥖', '🧀', '🥚', '🍳', '🥓', '🥞', '🍤', '🍗', '🍖', '🍕', '🌭', '🍔', '🍟', '🥙', '🌮', '🌯', '🥗', '🥘', '🍝', '🍜', '🍲', '🍥', '🍣', '🍱', '🍛', '🍚', '🍙', '🍘', '🍢', '🍡', '🍧', '🍨', '🍦', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🥛', '🍼', '☕️', '🍵', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🍾', '🥄', '🍴', '🍽'],
+            'travel': ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎', '🚓', '🚑', '🚒', '🚐', '🚚', '🚛', '🚜', '🛴', '🚲', '🛵', '🏍', '🚨', '🚔', '🚍', '🚘', '🚖', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆', '🚇', '🚊', '🚉', '🚁', '🛩', '✈️', '🛫', '🛬', '🚀', '🛰', '💺', '🛶', '⛵️', '🛥', '🚤', '🛳', '⛴', '🚢', '⚓️', '🚧', '⛽️', '🚏', '🚦', '🚥', '🗺', '🗿', '🗽', '⛲️', '🗼', '🏰', '🏯', '🏟', '🎡', '🎢', '🎠', '⛱', '🏖', '🏝', '⛰', '🏔', '🗻', '🌋', '🏜', '🏕', '⛺️', '🛤', '🛣', '🏗', '🏭', '🏠', '🏡', '🏘', '🏚', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛', '⛪️', '🕌', '🕍', '🕋', '⛩', '🗾', '🎑', '🏞', '🌅', '🌄', '🌠', '🎇', '🎆', '🌇', '🌆', '🏙', '🌃', '🌌', '🌉', '🌁'],
+            'activities': ['⚽️', '🏀', '🏈', '⚾️', '🎾', '🏐', '🏉', '🎱', '🏓', '🏸', '🥅', '🏒', '🏑', '🏏', '⛳️', '🏹', '🎣', '🥊', '🥋', '⛸', '🎿', '⛷', '🏂', '🏋️‍♀️', '🏋️‍♂️', '🤺', '🤼‍♀️', '🤼‍♂️', '🤸‍♀️', '🤸‍♂️', '⛹️‍♀️', '⛹️‍♂️', '🤾‍♀️', '🤾‍♂️', '🏌️‍♀️', '🏌️‍♂️', '🏄‍♀️', '🏄‍♂️', '🏊‍♀️', '🏊‍♂️', '🤽‍♀️', '🤽‍♂️', '🚣‍♀️', '🚣‍♂️', '🏇', '🚴‍♀️', '🚴‍♂️', '🚵‍♀️', '🚵‍♂️', '🎽', '🏅', '🎖', '🥇', '🥈', '🥉', '🏆', '🏵', '🎗', '🎫', '🎟', '🎪', '🤹‍♀️', '🤹‍♂️', '🎭', '🎨', '🎬', '🎤', '🎧', '🎼', '🎹', '🥁', '🎷', '🎺', '🎸', '🎻', '🎲', '🎯', '🎳', '🎮', '🎰'],
+            'objects': ['🔮', '🎄', '📿', '💎', '💍', '💄', '💅', '👓', '🕶', '🥽', '🥼', '👔', '👕', '👖', '🧣', '🧤', '🧥', '🧦', '👗', '👘', '👙', '👚', '👛', '👜', '👝', '🎒', '👞', '👟', '🥾', '🥿', '👠', '👡', '👢', '👑', '👒', '🎩', '🎓', '📱', '📲', '💻', '⌨️', '🖥', '🖨', '🖱', '🖲', '🕹', '🗜', '💽', '💾', '💿', '📀', '📼', '📷', '📸', '📹', '🎥', '📽', '🎞', '📞', '☎️', '📟', '📠', '📺', '📻', '🎙', '🎚', '🎛', '⏱', '⏲', '⏰', '🕰', '⌛️', '⏳', '📡', '🔋', '🔌', '💡', '🔦', '🕯', '🗑', '🛢', '💸', '💵', '💴', '💶', '💷', '💰', '💳', '🧾', '💎', '⚖️', '🔧', '🔨', '⚒', '🛠', '⛏', '🔩', '⚙️', '⛓', '🧰', '🔫', '💣', '🧨', '🧲', '🗡', '⚔️', '🛡', '🚬', '⚰️', '⚱️', '🏺', '🔭', '🔬', '🔮', '🧿', '🧸', '📿', '💈', '⚗️', '🔑', '🗝', '🧶', '🧵', '🧹', '🧺', '🧻', '🚪', '🚿', '🛁', '🛀', '🧼', '🧽', '🧴', '🛎', '🔑', '🗝', '🚪', '🛋', '🛏', '🛌', '🧸', '🖼', '🏮', '🗺', '🧭', '🧱', '⛰️', '🏔️', '🗻', '🏕️', '🏠', '🏡', '🏢', '🏣', '🏤', '🏥', '🏦', '🏨', '🏩', '🏪', '🏫', '🏬', '🏭', '🏯', '🏰', '💒', '🗼', '🗽', '⛪', '🕌', '🕍', '⛩️', '🕋', '⛲', '⛺', '🏙️', '🎠', '🎪', '🎭', '🖼️', '🎨', '🧵', '🧶', '🧷', '🧹', '🧺', '🧻', '🧼', '🧽', '🧯', '🚿', '🛁'],
+            'symbols': ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈️', '♉️', '♊️', '♋️', '♌️', '♍️', '♎️', '♏️', '♐️', '♑️', '♒️', '♓️', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚️', '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️', '🆎', '🆑', '🅾️', '🆘', '❌', '⭕️', '🛑', '⛔️', '📛', '🚫', '💯', '💢', '♨️', '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '❗️', '❕', '❓', '❔', '‼️', '⁉️', '🔅', '🔆', '〽️', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✅', '🈯️', '💹', '❇️', '✳️', '❎', '🌐', '💠', 'Ⓜ️', '🌀', '💤', '🏧', '🚾', '♿️', '🅿️', '🈳', '🈂️', '🛂', '🛃', '🛄', '🛅', '🚹', '🚺', '🚼', '🚻', '🚮', '🎦', '📶', '🈁', '🔣', 'ℹ️', '🔤', '🔡', '🔠', '🆖', '🆗', '🆙', '🆒', '🆕', '🆓', '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟', '🔢', '#️⃣', '*️⃣', '⏏️', '▶️', '⏸', '⏯', '⏹', '⏺', '⏭', '⏮', '⏩', '⏪', '⏫', '⏬', '◀️', '🔼', '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️', '⤴️', '⤵️', '🔀', '🔁', '🔂', '🔄', '🔃', '🎵', '🎶', '➕', '➖', '➗', '✖️', '♾', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝', '🔜', '✔️', '☑️', '🔘', '⚪️', '⚫️', '🔴', '🔵', '🔺', '🔻', '🔸', '🔹', '🔶', '🔷', '🔳', '🔲', '▪️', '▫️', '◾️', '◽️', '◼️', '◻️', '⬛️', '⬜️', '🔈', '🔇', '🔉', '🔊', '🔔', '🔕', '📣', '📢', '👁‍🗨', '💬', '💭', '🗯', '♠️', '♣️', '♥️', '♦️', '🃏', '🎴', '🀄️', '🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚', '🕛', '🕜', '🕝', '🕞', '🕟', '🕠', '🕡', '🕢', '🕣', '🕤', '🕥', '🕦', '🕧']
+        };
+        
+        const currentCategory = 'smileys';
+        populateEmojiContainer(emojis[currentCategory]);
+        
+        $('.emoji-category').click(function() {
+            const category = $(this).data('category');
+            $('.emoji-category').removeClass('active');
+            $(this).addClass('active');
+            populateEmojiContainer(emojis[category]);
+        });
+    }
+    
+    // Populate emoji container with emojis from a category
+    function populateEmojiContainer(emojis) {
+        const emojiContainer = $('#emoji-container');
+        emojiContainer.empty();
+        
+        emojis.forEach(emoji => {
+            const emojiElement = $('<div class="emoji"></div>').text(emoji);
+            emojiElement.click(function() {
+                const messageInput = $('#message');
+                messageInput.val(messageInput.val() + emoji);
+                messageInput.focus();
+            });
+            emojiContainer.append(emojiElement);
+        });
+    }
+    
+    // Voice recording functions
+    function startRecording() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    $('#voice-record-button').addClass('recording');
+                    $('#voice-record-timer').addClass('show');
+                    
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (e) => {
+                        audioChunks.push(e.data);
+                    };
+                    
+                    mediaRecorder.start();
+                    isRecording = true;
+                    
+                    // Start timer
+                    recordingDuration = 0;
+                    recordingTimer = setInterval(updateRecordingTimer, 1000);
+                })
+                .catch(error => {
+                    console.error('Error accessing microphone:', error);
+                    alert('Could not access microphone. Please check your browser permissions.');
+                });
+        } else {
+            alert('Your browser does not support voice recording.');
+        }
+    }
+    
+    function stopRecording() {
+        if (mediaRecorder && isRecording) {
+            mediaRecorder.stop();
+            isRecording = false;
+            
+            // Stop timer
+            clearInterval(recordingTimer);
+            
+            $('#voice-record-button').removeClass('recording');
+            $('#voice-record-timer').removeClass('show');
+            $('#voice-record-timer').text('0:00');
+            
+            // Wait for the data to be available
+            mediaRecorder.onstop = () => {
+                // Automatically send voice message once recording stops
+                if (audioChunks.length > 0) {
+                    sendMessage();
+                }
+            };
+        }
+    }
+    
+    function updateRecordingTimer() {
+        recordingDuration++;
+        const minutes = Math.floor(recordingDuration / 60);
+        const seconds = recordingDuration % 60;
+        $('#voice-record-timer').text(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        
+        // Limit recording to 2 minutes
+        if (recordingDuration >= 120) {
+            stopRecording();
+        }
+    }
+    
+    // Function to send voice message
+    function sendVoiceMessage() {
+        if (!currentDiscussionId || audioChunks.length === 0) return;
+        
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Save the audio URL in session storage to keep it accessible after refresh
+        const audioKey = 'voice_message_' + Date.now();
+        sessionStorage.setItem(audioKey, audioUrl);
+        
+        $.ajax({
+            url: '../../controllers/LiveController.php?action=sendMessage',
+            method: 'POST',
+            data: {
+                discussion_id: currentDiscussionId,
+                message: '🔊 <audio controls class="audio-message" data-key="' + audioKey + '"><source src="' + audioUrl + '" type="audio/webm"></audio>',
+                user_id: currentUserId
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Clear audio chunks
+                    audioChunks = [];
+                    // Load the new message
+                    loadMessages();
+                    // Refresh discussions list
+                    loadRecentDiscussions();
+                } else {
+                    alert('Error sending voice message: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Error connecting to server');
+            }
+        });
+    }
     
     // Function to create stars for the background
     function createStars() {

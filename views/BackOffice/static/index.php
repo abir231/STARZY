@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<div class="cosmic-nav-container">
+    <div class="cosmic-navbar">
+        <!-- Brand Logo with Astronomy Theme -->
+        <div class="cosmic-brand">
+    <img src="logo.png" alt="Logo STARZY" class="cosmic-logo" style="height: 200px; width: auto;">
+    <span class="cosmic-title">STARZY</span>
+</div>
+
+
+        <!-- Navigation Elements -->
+        <div class="cosmic-nav-elements">
+            <!-- Search (Telescope) -->
+            <div class="cosmic-search-box">
+                <i class="fas fa-telescope cosmic-search-icon"></i>
+                <input type="text" class="cosmic-search-input" placeholder="Search the cosmos...">
+            </div>
+
+            <!-- Messages (Satellite) -->
+            <div class="cosmic-nav-item">
+                <div class="cosmic-icon-container">
+                    <i class="fas fa-satellite-dish cosmic-icon" style="color: #4fc3f7;"></i>
+                    <span class="cosmic-notification-badge pulse">3</span>
+                </div>
+                <span class="cosmic-label">Messages</span>
+            </div>
+
+            <!-- Notifications (Supernova) -->
+            <div class="cosmic-nav-item">
+                <div class="cosmic-icon-container">
+                    <i class="fas fa-meteor cosmic-icon" style="color: #ff6d00;"></i>
+                    <span class="cosmic-notification-badge blink">5</span>
+                </div>
+                <span class="cosmic-label">Alerts</span>
+            </div>
+
+            <!-- User Profile (Astronaut) -->
+            <div class="cosmic-nav-item cosmic-profile">
+                <div class="cosmic-icon-container">
+                    <i class="fas fa-user-astronaut cosmic-icon" style="color: #b388ff;"></i>
+                </div>
+                <span class="cosmic-label">Mission Control</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Cosmic Navigation Styles */
+.cosmic-nav-container {
+    background: linear-gradient(135deg, #0f0c29 0%, #1a237e 100%);
+    padding: 0 2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.cosmic-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 0;
+}
+
+.cosmic-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cosmic-logo {
+    font-size: 2rem;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+    animation: twinkle 3s infinite alternate;
+}
+
+.cosmic-title {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.cosmic-nav-elements {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Search Box */
+.cosmic-search-box {
+    position: relative;
+    margin-right: 1rem;
+}
+
+.cosmic-search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+}
+
+.cosmic-search-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.8rem 1rem 0.8rem 3rem;
+    border-radius: 30px;
+    width: 250px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.cosmic-search-input:focus {
+    outline: none;
+    border-color: #4fc3f7;
+    box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.3);
+    width: 300px;
+}
+
+/* Navigation Items */
+.cosmic-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.cosmic-icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cosmic-icon {
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+}
+
+.cosmic-nav-item:hover .cosmic-icon {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+.cosmic-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cosmic-nav-item:hover .cosmic-label {
+    opacity: 1;
+}
+
+/* Notification Badges */
+.cosmic-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #FFD700;
+    color: #0f0c29;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+/* Animations */
+@keyframes twinkle {
+    0% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(255, 215, 0, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .cosmic-nav-elements {
+        gap: 1.5rem;
+    }
+    
+    .cosmic-search-input {
+        width: 200px;
+    }
+    
+    .cosmic-search-input:focus {
+        width: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cosmic-navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .cosmic-brand {
+        margin-bottom: 1rem;
+    }
+    
+    .cosmic-search-box {
+        margin: 0 0 1rem 0;
+    }
+    
+    .cosmic-nav-elements {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .cosmic-label {
+        display: none;
+    }
+}
+</style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Starzy Chat Admin Dashboard">
+    <meta name="author" content="Starzy">
+    <meta name="keywords" content="starzy, admin, dashboard, chat, management">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+
+    <title>Starzy Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap and Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+    <link href="../../css/font-awesome.min.css" rel="stylesheet" />
+    
+    <style>
+        :root {
+            --primary-color: #9370DB;
+            --secondary-color: #BA55D3;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --purple-color: #9370DB;
+            --indigo-color: #6A5ACD;
+            --lavender-color: #B57EDC;
+            --violet-color: #BA55D3;
+        }
+        
+        .badge-purple {
+            background-color: var(--purple-color);
+            color: white;
+        }
+        
+        .badge-indigo {
+            background-color: var(--indigo-color);
+            color: white;
+        }
+        
+        .badge-lavender {
+            background-color: var(--lavender-color);
+            color: white;
+        }
+        
+        .badge-violet {
+            background-color: var(--violet-color);
+            color: white;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            color: #444;
+        }
+        
+        .wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            position: fixed;
+            height: 100%;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-content {
+            padding: 1.5rem;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .sidebar-brand {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: block;
+            padding: 1.25rem 1.5rem;
+            text-decoration: none;
+        }
+        
+        .sidebar-brand:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .sidebar-nav {
+            padding-left: 0;
+            list-style: none;
+            margin-bottom: 0;
+        }
+        
+        .sidebar-header {
+            background: linear-gradient(to right, #0f0c29, #1a237e) !important;
+            color: white !important;
+            padding: 10px 15px;
+            font-weight: bold;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+        }
+        
+        .sidebar-item {
+            position: relative;
+            margin-bottom: .2rem;
+        }
+        
+        .sidebar-link {
+            background: linear-gradient(to right, #0f0c29, #1a237e) !important;
+            color: white !important;
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: background 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .sidebar-link i {
+            color: white !important;
+            margin-right: 8px;
+        }
+        
+        .sidebar-link:hover {
+            background: linear-gradient(to right, #1a237e, #0f0c29) !important;
+            color: rgb(151, 21, 90) !important;
+            transform: scale(1.02);
+        }
+        
+        .sidebar-item.active .sidebar-link {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+        }
+        
+        .main {
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            padding-top: 0;
+            position: relative;
+            margin-left: 260px;
+            transition: all 0.3s;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .card {
+            margin-bottom: 24px;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            border-radius: .5rem;
+            border: none;
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            background-color: transparent;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            margin-bottom: 0;
+            color: #495057;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #6c757d;
+        }
+        
+        .action-btn {
+            margin-right: 5px;
+            color: #fff;
+            border: none;
+            padding: .2rem .5rem;
+            border-radius: .2rem;
+            cursor: pointer;
+            transition: background-color .15s ease-in-out;
+        }
+        
+        .btn-view {
+            background-color: var(--purple-color);
+        }
+        
+        .btn-edit {
+            background-color: var(--lavender-color);
+        }
+        
+        .btn-delete {
+            background-color: var(--indigo-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #8a65d7;
+            border-color: #8a65d7;
+        }
+        
+        .footer {
+            padding: 1.25rem;
+            border-top: 1px solid #e9ecef;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .message-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Modal customization */
+        .modal-content {
+            border-radius: .5rem;
+            border: none;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-top-left-radius: .5rem;
+            border-top-right-radius: .5rem;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .close {
+            color: #fff;
+            text-shadow: none;
+            opacity: .8;
+        }
+        
+        .close:hover {
+            color: #fff;
+            opacity: 1;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: .4em .6em;
+        }
+        
+        .table-responsive {
+            min-height: 300px;
+        }
+        
+        #messages-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message-item {
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        
+        .message-actions {
+            display: flex;
+        }
+        
+        .message-content {
+            word-break: break-word;
+        }
+        
+        .stats-card {
+            border-radius: .5rem;
+            padding: 1.5rem;
+            background-color: #fff;
+            box-shadow: 0 0.75rem 1.5rem rgba(18, 38, 63, 0.03);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stats-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .stats-details {
+            flex: 1;
+        }
+        
+        .stats-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+        
+        .stats-description {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        
+        .icon-discussions {
+            background-color: rgba(147, 112, 219, 0.2);
+            color: var(--primary-color);
+        }
+        
+        .icon-messages {
+            background-color: rgba(23, 162, 184, 0.2);
+            color: var(--info-color);
+        }
+        
+        .icon-active {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success-color);
+        }
+        
+        .search-box {
+            max-width: 300px;
+            margin-bottom: 1rem;
+        }
+        
+        .action-buttons {
+            margin-bottom: 1rem;
+        }
+        
+        .discussion-date {
+            width: 170px;
+        }
+        
+        .search-clear {
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        .search-clear:hover {
+            color: var(--danger-color);
+        }
+        
+        .no-data {
+            padding: 2rem;
+            text-align: center;
+            color: #6c757d;
+        }
+        
+        /* Additional custom styling */
+        .simplebar-content-wrapper {
+            background: linear-gradient(to right, #0f0c29, #1a237e) !important;
+            color: white !important;
+        }
+        
+        .simplebar-content-wrapper a {
+            color: white !important;
+        }
+        
+        .simplebar-content-wrapper i {
+            color: white !important;
+        }
+        
+        .cosmic-brand {
+            display: flex;
+            align-items: center;
+            height: 60px;
+            overflow: hidden;
+        }
+        
+        .cosmic-logo {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .sidebar-div {
+            background: linear-gradient(to right, #0f0c29, #1a237e) !important;
+            color: white !important;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .sidebar-div a {
+            color: white !important;
+        }
+        
+        .sidebar-div i {
+            color: white !important;
+        }
+        
+        .sidebar-div a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        
+        .icon.nalika-like:before {
+            content: "\f12e";
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: rgb(240, 240, 240);
+            font-size: 14px;
+        }
+        
+        .icon.nalika-favorites:before {
+            content: "\f03e";
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #4a5568;
+        }
+        
+        .icon.nalika-favorites-button:before {
+            content: "\f15c";
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #5a6268;
+        }
+        
+        .icon.nalika-favorites-button:before {
+            content: "\f036";
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar js-sidebar">
+            <div class="sidebar-content js-simplebar sidebar-div">
+                <a class="sidebar-brand" href="index.html">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    <span class="align-middle">Starzy Admin</span>
+                </a>
+
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">
+                        Management
+                    </li>
+
+                    <li class="sidebar-item active">
+                        <a class="sidebar-link" href="index.html">
+                            <i class="align-middle fa fa-dashboard" aria-hidden="true"></i> 
+                            <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="../../../controllers/AdminController.php">
+                            <i class="align-middle fa fa-comments" aria-hidden="true"></i>
+                            <span class="align-middle">Chat Management</span>
+                        </a>
+                    </li>
+                    
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href=" ">
+                            <i class="align-middle fa fa-grid" aria-hidden="true"></i>
+                            <span class="align-middle">Gestion des patrimoines</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="gestActvt.html">
+                            <i class="align-middle fa fa-book" aria-hidden="true"></i>
+                            <span class="align-middle">Gestion des activités de patrimoine</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="">
+                            <i class="align-middle fa fa-user" aria-hidden="true"></i>
+                            <span class="align-middle">Gestion des comptes</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href=" ">
+                            <i class="align-middle fa fa-calendar" aria-hidden="true"></i>
+                            <span class="align-middle">Gestion des evenements</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href=" ">
+                            <i class="align-middle fa fa-check-square" aria-hidden="true"></i>
+                            <span class="align-middle">Gestion des reclamations</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="../../../views/FrontOffice/designe.php">
+                            <i class="align-middle fa fa-home" aria-hidden="true"></i>
+                            <span class="align-middle">Back to Website</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-header">
+                        Account
+                    </li>
+                    
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href=" ">
+                            <i class="align-middle fa fa-sign-out" aria-hidden="true"></i>
+                            <span class="align-middle">Se deconnecter</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main">
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <h1 class="h3 mb-3"><strong>Starzy Chat</strong> Management Dashboard</h1>
+
+                    <!-- Statistics Cards -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stats-card">
+                                <div class="stats-icon icon-discussions">
+                                    <i class="fa fa-comments"></i>
+                                </div>
+                                <div class="stats-details">
+                                    <h3 class="stats-number" id="total-discussions">0</h3>
+                                    <p class="stats-description">Total Discussions</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stats-card">
+                                <div class="stats-icon icon-messages">
+                                    <i class="fa fa-comment"></i>
+                                </div>
+                                <div class="stats-details">
+                                    <h3 class="stats-number" id="total-messages">0</h3>
+                                    <p class="stats-description">Total Messages</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stats-card">
+                                <div class="stats-icon icon-active">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <div class="stats-details">
+                                    <h3 class="stats-number" id="recent-discussions">0</h3>
+                                    <p class="stats-description">Discussions This Week</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Chart Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Discussion Activity Analysis</h5>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="chartTypeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Chart Type
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="chartTypeDropdown">
+                                            <a class="dropdown-item chart-type" href="#" data-type="pie">Pie Chart</a>
+                                            <a class="dropdown-item chart-type" href="#" data-type="doughnut">Doughnut Chart</a>
+                                            <a class="dropdown-item chart-type" href="#" data-type="bar">Bar Chart</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <p class="text-muted small">Categorization of discussions based on message volume</p>
+                                    </div>
+                                    <div style="height: 230px;">
+                                        <canvas id="discussionsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Activity Classification</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-3">
+                                        <div class="col-3">
+                                            <span class="badge badge-purple">No Messages</span>
+                                        </div>
+                                        <div class="col-3">
+                                            <span class="badge badge-indigo">Low (1-5)</span>
+                                        </div>
+                                        <div class="col-3">
+                                            <span class="badge badge-lavender">Medium (6-15)</span>
+                                        </div>
+                                        <div class="col-3">
+                                            <span class="badge badge-violet">High (16+)</span>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive" style="max-height: 150px; overflow-y: auto;">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Category</th>
+                                                    <th>Count</th>
+                                                    <th>%</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="activity-summary">
+                                                <!-- Will be populated dynamically -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Discussions Management Section -->
+                    <div class="row">
+                        <div class="col-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Chat Discussions</h5>
+                                    <button class="btn btn-primary btn-sm" id="refresh-discussions">
+                                        <i class="fa fa-refresh"></i> Refresh
+                                    </button>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center action-buttons">
+                                        <div class="search-box">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="search-discussions" placeholder="Search by username...">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text search-clear" id="clear-search">
+                                                        <i class="fa fa-times"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createDiscussionModal">
+                                            <i class="fa fa-plus"></i> New Discussion
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-hover my-0" id="discussions-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>#ID</th>
+                                                    <th>Username</th>
+                                                    <th class="d-none d-xl-table-cell discussion-date">Creation Date</th>
+                                                    <th class="d-none d-md-table-cell">User ID</th>
+                                                    <th class="d-none d-md-table-cell">Messages</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="discussions-list">
+                                                <!-- Discussions will be loaded here dynamically -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Messages Section (initially hidden) -->
+                    <div class="row" id="messages-section" style="display: none;">
+                        <div class="col-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Messages for Discussion: <span id="current-discussion-name"></span></h5>
+                                    <div>
+                                        <button class="btn btn-secondary btn-sm mr-2" id="back-to-discussions">
+                                            <i class="fa fa-arrow-left"></i> Back
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" id="refresh-messages">
+                                            <i class="fa fa-refresh"></i> Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="search-box">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="search-messages" placeholder="Search in messages...">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text search-clear" id="clear-message-search">
+                                                        <i class="fa fa-times"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#createMessageModal">
+                                            <i class="fa fa-plus"></i> New Message
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="messages-container">
+                                        <!-- Messages will be loaded here dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row text-muted">
+                        <div class="col-6 text-start">
+                            <p class="mb-0">
+                                <a class="text-muted" href="#"><strong>Starzy Chat Admin</strong></a> &copy; 2025
+                            </p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="#">Support</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="#">Help Center</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="#">Privacy</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="#">Terms</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Create Discussion Modal -->
+    <div class="modal fade" id="createDiscussionModal" tabindex="-1" role="dialog" aria-labelledby="createDiscussionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createDiscussionModalLabel">Create New Discussion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-discussion-form">
+                        <div class="form-group">
+                            <label for="new-username">Username</label>
+                            <input type="text" class="form-control" id="new-username" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="new-user-id">User ID</label>
+                            <input type="number" class="form-control" id="new-user-id" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-new-discussion">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-new-discussion">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Discussion Modal -->
+    <div class="modal fade" id="editDiscussionModal" tabindex="-1" role="dialog" aria-labelledby="editDiscussionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDiscussionModalLabel">Edit Discussion</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-discussion-form">
+                        <input type="hidden" id="edit-discussion-id">
+                        <div class="form-group">
+                            <label for="edit-username">Username</label>
+                            <input type="text" class="form-control" id="edit-username" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-edit-discussion">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-edited-discussion">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Message Modal -->
+    <div class="modal fade" id="createMessageModal" tabindex="-1" role="dialog" aria-labelledby="createMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createMessageModalLabel">Add New Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-message-form">
+                        <input type="hidden" id="message-discussion-id">
+                        <div class="form-group">
+                            <label for="new-message-text">Message</label>
+                            <textarea class="form-control" id="new-message-text" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-new-message">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-new-message">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Message Modal -->
+    <div class="modal fade" id="editMessageModal" tabindex="-1" role="dialog" aria-labelledby="editMessageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMessageModalLabel">Edit Message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-message-form">
+                        <input type="hidden" id="edit-message-id">
+                        <div class="form-group">
+                            <label for="edit-message-text">Message</label>
+                            <textarea class="form-control" id="edit-message-text" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-edit-message">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-edited-message">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="delete-confirm-text">Are you sure you want to delete this item?</p>
+                    <input type="hidden" id="delete-item-id">
+                    <input type="hidden" id="delete-item-type">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel-delete">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <!-- Feather Icons -->
+    <script src="js/app.js"></script>
+    
+    <!-- Admin Dashboard Script -->
+    <script>
+        $(document).ready(function() {
+            let currentDiscussionId = null;
+            let currentDiscussionName = null;
+            let allDiscussions = [];
+            let discussionsChart = null;
+            let currentChartType = 'pie';
+            
+            // Fix modal closing issues
+            $('#cancel-edit-discussion, #cancel-edit-message, #cancel-new-discussion, #cancel-new-message, #cancel-delete').click(function() {
+                $('.modal').modal('hide');
+            });
+            
+            // Initialize Feather icons if available
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+            
+            // Initial data load
+            loadDiscussions();
+            loadStats();
+            
+            // Chart type selection
+            $('.chart-type').click(function(e) {
+                e.preventDefault();
+                currentChartType = $(this).data('type');
+                updateChart(allDiscussions);
+            });
+            
+            // Refresh buttons
+            $('#refresh-discussions').click(function() {
+                loadDiscussions();
+                loadStats();
+            });
+            
+            $('#refresh-messages').click(function() {
+                if (currentDiscussionId) {
+                    loadMessages(currentDiscussionId);
+                }
+            });
+            
+            // Back to discussions button
+            $('#back-to-discussions').click(function() {
+                $('#messages-section').hide();
+                currentDiscussionId = null;
+                currentDiscussionName = null;
+            });
+            
+            // Search discussions
+            $('#search-discussions').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                if (searchTerm === '') {
+                    renderDiscussions(allDiscussions);
+                } else {
+                    const filteredDiscussions = allDiscussions.filter(discussion => 
+                        discussion.nom_user.toLowerCase().includes(searchTerm) || 
+                        discussion.id_dis.toString().includes(searchTerm)
+                    );
+                    renderDiscussions(filteredDiscussions);
+                }
+            });
+            
+            // Clear search
+            $('#clear-search').click(function() {
+                $('#search-discussions').val('');
+                renderDiscussions(allDiscussions);
+            });
+            
+            // Search messages
+            $('#search-messages').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                $('.message-item').each(function() {
+                    const messageText = $(this).find('.message-content').text().toLowerCase();
+                    if (messageText.includes(searchTerm)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+            
+            // Clear message search
+            $('#clear-message-search').click(function() {
+                $('#search-messages').val('');
+                $('.message-item').show();
+            });
+            
+            // Create new discussion
+            $('#save-new-discussion').click(function() {
+                const username = $('#new-username').val().trim();
+                const userId = $('#new-user-id').val().trim();
+                
+                if (!username || !userId) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                $.ajax({
+                    url: '../../../controllers/LiveController.php?action=createDiscussion',
+                    method: 'POST',
+                    data: {
+                        nom_user: username,
+                        user_id: userId
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#createDiscussionModal').modal('hide');
+                            $('#new-username').val('');
+                            $('#new-user-id').val('');
+                            loadDiscussions();
+                            loadStats();
+                            alert('Discussion created successfully');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error connecting to server');
+                    }
+                });
+            });
+            
+            // Edit discussion
+            $('#save-edited-discussion').click(function() {
+                const discussionId = $('#edit-discussion-id').val();
+                const newName = $('#edit-username').val().trim();
+                
+                if (!newName) {
+                    alert('Username cannot be empty');
+                    return;
+                }
+                
+                $.ajax({
+                    url: '../../../controllers/LiveController.php?action=updateDiscussionName',
+                    method: 'POST',
+                    data: {
+                        discussion_id: discussionId,
+                        new_name: newName
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#editDiscussionModal').modal('hide');
+                            loadDiscussions();
+                            
+                            // Update current discussion name if we're viewing that discussion
+                            if (currentDiscussionId === discussionId) {
+                                currentDiscussionName = newName;
+                                $('#current-discussion-name').text(newName);
+                            }
+                            
+                            alert('Discussion updated successfully');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error connecting to server');
+                    }
+                });
+            });
+            
+            // Create new message
+            $('#save-new-message').click(function() {
+                const discussionId = $('#message-discussion-id').val();
+                const messageText = $('#new-message-text').val().trim();
+                
+                if (!messageText) {
+                    alert('Message cannot be empty');
+                    return;
+                }
+                
+                $.ajax({
+                    url: '../../../controllers/LiveController.php?action=sendMessage',
+                    method: 'POST',
+                    data: {
+                        discussion_id: discussionId,
+                        message: messageText
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#createMessageModal').modal('hide');
+                            $('#new-message-text').val('');
+                            loadMessages(discussionId);
+                            loadStats();
+                            alert('Message sent successfully');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error connecting to server');
+                    }
+                });
+            });
+            
+            // Edit message
+            $('#save-edited-message').click(function() {
+                const messageId = $('#edit-message-id').val();
+                const newText = $('#edit-message-text').val().trim();
+                
+                if (!newText) {
+                    alert('Message cannot be empty');
+                    return;
+                }
+                
+                $.ajax({
+                    url: '../../../controllers/LiveController.php?action=updateMessage',
+                    method: 'POST',
+                    data: {
+                        message_id: messageId,
+                        new_text: newText
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#editMessageModal').modal('hide');
+                            loadMessages(currentDiscussionId);
+                            alert('Message updated successfully');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error connecting to server');
+                    }
+                });
+            });
+            
+            // Delete confirmation
+            $('#confirm-delete').click(function() {
+                const itemType = $('#delete-item-type').val();
+                const itemId = $('#delete-item-id').val();
+                
+                let url, data;
+                
+                if (itemType === 'message') {
+                    url = '../../../controllers/LiveController.php?action=deleteMessage';
+                    data = { message_id: itemId };
+                } else if (itemType === 'discussion') {
+                    url = '../../../controllers/LiveController.php?action=deleteDiscussion';
+                    data = { discussion_id: itemId };
+                } else {
+                    alert('Invalid item type');
+                    return;
+                }
+                
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: data,
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#deleteConfirmModal').modal('hide');
+                            
+                            if (itemType === 'message') {
+                                loadMessages(currentDiscussionId);
+                            } else if (itemType === 'discussion') {
+                                loadDiscussions();
+                                loadStats();
+                                
+                                // If the current discussion was deleted, go back to the discussions list
+                                if (currentDiscussionId === itemId) {
+                                    $('#messages-section').hide();
+                                    currentDiscussionId = null;
+                                    currentDiscussionName = null;
+                                }
+                            }
+                            
+                            alert('Item deleted successfully');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error connecting to server');
+                    }
+                });
+            });
+            
+            // Function to load statistics
+            function loadStats() {
+                $.ajax({
+                    url: '../../../controllers/AdminController.php?action=getStats',
+                    method: 'GET',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#total-discussions').text(response.data.total_discussions);
+                            $('#total-messages').text(response.data.total_messages);
+                            $('#recent-discussions').text(response.data.recent_discussions);
+                        } else {
+                            console.error('Error loading statistics');
+                        }
+                    },
+                    error: function() {
+                        console.error('Error connecting to server');
+                    }
+                });
+            }
+            
+            // Function to load all discussions
+            function loadDiscussions() {
+                $.ajax({
+                    url: '../../../controllers/LiveController.php?action=getDiscussions',
+                    method: 'GET',
+                    success: function(discussions) {
+                        allDiscussions = discussions;
+                        renderDiscussions(discussions);
+                    },
+                    error: function() {
+                        console.error('Error loading discussions');
+                    }
+                });
+            }
+            
+            // Function to update the chart
+            function updateChart(discussions) {
+                // Process discussion data for chart
+                let activityCategories = {
+                    'Inactive (0)': 0,
+                    'Low (1-5)': 0,
+                    'Medium (6-15)': 0,
+                    'High (16+)': 0
+                };
+                
+                // Count discussions by activity level
+                discussions.forEach(function(discussion) {
+                    const messageCount = discussion.message_count || 0;
+                    
+                    if (messageCount === 0) {
+                        activityCategories['Inactive (0)']++;
+                    } else if (messageCount <= 5) {
+                        activityCategories['Low (1-5)']++;
+                    } else if (messageCount <= 15) {
+                        activityCategories['Medium (6-15)']++;
+                    } else {
+                        activityCategories['High (16+)']++;
+                    }
+                });
+                
+                // Prepare chart data
+                const labels = Object.keys(activityCategories);
+                const data = Object.values(activityCategories);
+                
+                // Set colors for chart - using the theme's purple palette
+                const backgroundColor = [
+                    'rgba(147, 112, 219, 0.8)',  // Purple
+                    'rgba(106, 90, 205, 0.8)',   // Indigo 
+                    'rgba(181, 126, 220, 0.8)',  // Lavender
+                    'rgba(186, 85, 211, 0.8)'    // Violet
+                ];
+                
+                const borderColor = [
+                    'rgba(147, 112, 219, 1)',    // Purple
+                    'rgba(106, 90, 205, 1)',     // Indigo
+                    'rgba(181, 126, 220, 1)',    // Lavender
+                    'rgba(186, 85, 211, 1)'      // Violet
+                ];
+                
+                // Calculate percentages for the summary table
+                let totalDiscussions = discussions.length;
+                let summaryTable = $('#activity-summary');
+                summaryTable.empty();
+                
+                labels.forEach(function(label, index) {
+                    const count = data[index];
+                    const percentage = totalDiscussions > 0 ? ((count / totalDiscussions) * 100).toFixed(1) : 0;
+                    
+                    // Create suggested action based on category
+                    let action = '';
+                    if (label === 'Inactive (0)') {
+                        action = 'Consider removal or engagement';
+                    } else if (label === 'Low (1-5)') {
+                        action = 'Monitor for potential growth';
+                    } else if (label === 'Medium (6-15)') {
+                        action = 'Healthy engagement level';
+                    } else if (label === 'High (16+)') {
+                        action = 'May need active moderation';
+                    }
+                    
+                    summaryTable.append(`
+                        <tr>
+                            <td>
+                                <span class="badge badge-${index === 0 ? 'purple' : (index === 1 ? 'indigo' : (index === 2 ? 'lavender' : 'violet'))}">
+                                    ${label}
+                                </span>
+                            </td>
+                            <td>${count}</td>
+                            <td>${percentage}%</td>
+                            <td><small class="text-muted">${action}</small></td>
+                        </tr>
+                    `);
+                });
+                
+                // Check if we need to create or update the chart
+                if (discussionsChart) {
+                    // Update existing chart
+                    discussionsChart.data.labels = labels;
+                    discussionsChart.data.datasets[0].data = data;
+                    discussionsChart.data.datasets[0].backgroundColor = backgroundColor;
+                    discussionsChart.config.type = currentChartType;
+                    discussionsChart.update();
+                } else {
+                    // Create new chart
+                    const ctx = document.getElementById('discussionsChart').getContext('2d');
+                    discussionsChart = new Chart(ctx, {
+                        type: currentChartType,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: backgroundColor,
+                                borderColor: borderColor,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        font: {
+                                            size: 12
+                                        }
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Discussions by Message Volume',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    },
+                                    padding: {
+                                        bottom: 15
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw || 0;
+                                            const percentage = totalDiscussions > 0 ? ((value / totalDiscussions) * 100).toFixed(1) : 0;
+                                            return `${label}: ${value} discussions (${percentage}%)`;
+                                        },
+                                        afterLabel: function(context) {
+                                            const label = context.label || '';
+                                            let recommendation = '';
+                                            
+                                            if (label === 'Inactive (0)') {
+                                                recommendation = 'These discussions may need engagement prompts or cleanup';
+                                            } else if (label === 'Low (1-5)') {
+                                                recommendation = 'These discussions are starting to engage users';
+                                            } else if (label === 'Medium (6-15)') {
+                                                recommendation = 'These discussions show healthy engagement';
+                                            } else if (label === 'High (16+)') {
+                                                recommendation = 'These discussions are very active and may need moderation';
+                                            }
+                                            
+                                            return recommendation;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            // Function to render discussions in the table
+            function renderDiscussions(discussions) {
+                const discussionsList = $('#discussions-list');
+                discussionsList.empty();
+                
+                // Update chart with discussion data
+                updateChart(discussions);
+                
+                if (discussions.length === 0) {
+                    discussionsList.html('<tr><td colspan="6" class="no-data">No discussions found</td></tr>');
+                    return;
+                }
+                
+                discussions.forEach(function(discussion) {
+                    const date = new Date(discussion.creation_date);
+                    const formattedDate = date.toLocaleString();
+                    
+                    const messageCount = discussion.message_count || 0;
+                    
+                    const row = `
+                        <tr data-id="${discussion.id_dis}">
+                            <td>${discussion.id_dis}</td>
+                            <td>${discussion.nom_user}</td>
+                            <td class="d-none d-xl-table-cell">${formattedDate}</td>
+                            <td class="d-none d-md-table-cell">${discussion.user_id}</td>
+                            <td class="d-none d-md-table-cell">${messageCount}</td>
+                            <td>
+                                <button class="action-btn btn-view view-discussion" data-id="${discussion.id_dis}" data-name="${discussion.nom_user}">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <button class="action-btn btn-edit edit-discussion" data-id="${discussion.id_dis}" data-name="${discussion.nom_user}">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="action-btn btn-delete delete-discussion" data-id="${discussion.id_dis}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    
+                    discussionsList.append(row);
+                });
+                
+                // Add event handlers for the action buttons
+                $('.view-discussion').click(function() {
+                    const discussionId = $(this).data('id');
+                    const discussionName = $(this).data('name');
+                    viewDiscussion(discussionId, discussionName);
+                });
+                
+                $('.edit-discussion').click(function() {
+                    const discussionId = $(this).data('id');
+                    const discussionName = $(this).data('name');
+                    openEditDiscussionModal(discussionId, discussionName);
+                });
+                
+                $('.delete-discussion').click(function() {
+                    const discussionId = $(this).data('id');
+                    openDeleteConfirmModal('discussion', discussionId, 'Are you sure you want to delete this discussion? All associated messages will be deleted as well.');
+                });
+                
+                // Reinitialize Feather icons if available
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            }
+            
+            // Function to view a discussion and its messages
+            function viewDiscussion(discussionId, discussionName) {
+                currentDiscussionId = discussionId;
+                currentDiscussionName = discussionName;
+                
+                $('#current-discussion-name').text(discussionName);
+                $('#message-discussion-id').val(discussionId);
+                
+                loadMessages(discussionId);
+                
+                $('#messages-section').show();
+            }
+            
+            // Function to load messages for a discussion
+            function loadMessages(discussionId) {
+                $.ajax({
+                    url: '../../../controllers/LiveController.php?action=getMessages',
+                    method: 'GET',
+                    data: { discussion_id: discussionId },
+                    success: function(messages) {
+                        renderMessages(messages);
+                    },
+                    error: function() {
+                        console.error('Error loading messages');
+                    }
+                });
+            }
+            
+            // Function to render messages
+            function renderMessages(messages) {
+                const messagesContainer = $('#messages-container');
+                messagesContainer.empty();
+                
+                if (messages.length === 0) {
+                    messagesContainer.html('<div class="no-data">No messages found in this discussion</div>');
+                    return;
+                }
+                
+                messages.forEach(function(message) {
+                    const date = new Date(message.date_envoi);
+                    const formattedDate = date.toLocaleString();
+                    
+                    const messageHtml = `
+                        <div class="message-item" data-id="${message.id_message}">
+                            <div class="message-header">
+                                <div>
+                                    <strong>ID: ${message.id_message}</strong> • ${formattedDate}
+                                </div>
+                                <div class="message-actions">
+                                    <button class="action-btn btn-edit edit-message" data-id="${message.id_message}" data-text="${escapeHtml(message.raw_message)}">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="action-btn btn-delete delete-message" data-id="${message.id_message}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="message-content">
+                                ${message.raw_message}
+                            </div>
+                        </div>
+                    `;
+                    
+                    messagesContainer.append(messageHtml);
+                });
+                
+                // Add event handlers for the action buttons
+                $('.edit-message').click(function() {
+                    const messageId = $(this).data('id');
+                    const messageText = $(this).closest('.message-item').find('.message-content').text().trim();
+                    openEditMessageModal(messageId, messageText);
+                });
+                
+                $('.delete-message').click(function() {
+                    const messageId = $(this).data('id');
+                    openDeleteConfirmModal('message', messageId, 'Are you sure you want to delete this message?');
+                });
+            }
+            
+            // Function to open edit discussion modal
+            function openEditDiscussionModal(discussionId, discussionName) {
+                $('#edit-discussion-id').val(discussionId);
+                $('#edit-username').val(discussionName);
+                $('#editDiscussionModal').modal('show');
+            }
+            
+            // Function to open edit message modal
+            function openEditMessageModal(messageId, messageText) {
+                $('#edit-message-id').val(messageId);
+                $('#edit-message-text').val(messageText);
+                $('#editMessageModal').modal('show');
+            }
+            
+            // Function to open delete confirmation modal
+            function openDeleteConfirmModal(itemType, itemId, confirmText) {
+                $('#delete-item-type').val(itemType);
+                $('#delete-item-id').val(itemId);
+                $('#delete-confirm-text').text(confirmText);
+                $('#deleteConfirmModal').modal('show');
+            }
+            
+            // Helper function to escape HTML entities
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.innerText = text;
+                return div.innerHTML;
+            }
+        });
+    </script>
+</body>
+
+</html>

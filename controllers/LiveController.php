@@ -16,33 +16,58 @@ class LiveController {
     
     public function index() {
         // Load the live chat view
-        include(__DIR__ . '/../views/live.php');
+        include(__DIR__ . '/../views/FrontOffice/live.php');
     }
     
     public function getDiscussions() {
         // Use the method that includes message counts
         $discussions = $this->discussModel->getDiscussionsWithMessageCount();
+        
+        // Set the correct content type header
         header('Content-Type: application/json');
+        
+        // Return the discussions as JSON
         echo json_encode($discussions);
     }
     
-    public function getMessages($discussionId) {
+    public function getMessages() {
+        if (!isset($_GET['discussion_id'])) {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'error', 'message' => 'Discussion ID is required']);
+            return;
+        }
+        
+        // Get the discussion ID from query parameters
+        $discussionId = filter_input(INPUT_GET, 'discussion_id', FILTER_VALIDATE_INT);
+        
         // Check if current_user_id was provided (for client comparison)
         $currentUserId = isset($_GET['current_user_id']) ? filter_input(INPUT_GET, 'current_user_id', FILTER_VALIDATE_INT) : null;
         
+        // Get messages for the specified discussion
         $messages = $this->messageModel->getMessagesByDiscussionId($discussionId);
         
-        // Add the current user flag to each message for client-side comparison
-        if ($currentUserId) {
-            foreach ($messages as &$message) {
+        // For each message, get reaction counts and user reaction
+        foreach ($messages as &$message) {
+            // Get reaction counts
+            $reactions = $this->messageModel->getMessageReactions($message['id_message']);
+            $message['reactions'] = $reactions;
+            
+            // If current user ID is provided, get their reaction
+            if ($currentUserId) {
+                $userReaction = $this->messageModel->getUserReaction($message['id_message'], $currentUserId);
+                $message['user_reaction'] = $userReaction;
+                
                 // Add user_id if not present (should be added by model)
                 if (!isset($message['user_id'])) {
-                    $message['user_id'] = $currentUserId; // Temporarily mark all as current user's messages
+                    $message['user_id'] = $currentUserId; // For demo, marking all as current user's messages
                 }
             }
         }
         
+        // Set the correct content type header
         header('Content-Type: application/json');
+        
+        // Return the messages as JSON
         echo json_encode($messages);
     }
     
@@ -121,7 +146,7 @@ class LiveController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validate and sanitize input
             $discussionId = filter_input(INPUT_POST, 'discussion_id', FILTER_VALIDATE_INT);
-            $rawMessage = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+            $rawMessage = isset($_POST['message']) ? $_POST['message'] : null; // Don't sanitize HTML content for audio messages
             $userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
             
             if (!$discussionId || !$rawMessage) {
@@ -136,16 +161,26 @@ class LiveController {
             if ($messageId) {
                 // Get the newly created message with user info
                 $message = $this->messageModel->getMessageById($messageId);
-                $discussion = $this->discussModel->getDiscussionById($discussionId);
-                $message['nom_user'] = $discussion['nom_user'];
                 
-                // Add user_id to identify message ownership (if not already in message)
-                if (!isset($message['user_id']) && $userId) {
-                    $message['user_id'] = $userId;
+                if ($message) {
+                    $discussion = $this->discussModel->getDiscussionById($discussionId);
+                    $message['nom_user'] = $discussion['nom_user'];
+                    
+                    // Add user_id to identify message ownership (if not already in message)
+                    if (!isset($message['user_id']) && $userId) {
+                        $message['user_id'] = $userId;
+                    }
+                    
+                    // Add empty reaction counts
+                    $message['reactions'] = ['like' => 0, 'dislike' => 0];
+                    $message['user_reaction'] = null;
+                    
+                    header('Content-Type: application/json');
+                    echo json_encode(['status' => 'success', 'message' => $message]);
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode(['status' => 'error', 'message' => 'Message created but could not be retrieved']);
                 }
-                
-                header('Content-Type: application/json');
-                echo json_encode(['status' => 'success', 'message' => $message]);
             } else {
                 header('Content-Type: application/json');
                 echo json_encode(['status' => 'error', 'message' => 'Failed to send message']);
@@ -157,7 +192,7 @@ class LiveController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Validate and sanitize input
             $messageId = filter_input(INPUT_POST, 'message_id', FILTER_VALIDATE_INT);
-            $newText = filter_input(INPUT_POST, 'new_text', FILTER_SANITIZE_STRING);
+            $newText = isset($_POST['new_text']) ? $_POST['new_text'] : null; // Don't sanitize to allow HTML
             
             if (!$messageId || !$newText) {
                 header('Content-Type: application/json');
@@ -199,6 +234,55 @@ class LiveController {
             }
         }
     }
+    
+    // New method to add a reaction to a message
+    public function addReaction() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate and sanitize input
+            $messageId = filter_input(INPUT_POST, 'message_id', FILTER_VALIDATE_INT);
+            $userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+            $reactionType = filter_input(INPUT_POST, 'reaction_type', FILTER_SANITIZE_STRING);
+            
+            if (!$messageId || !$userId || !in_array($reactionType, ['like', 'dislike'])) {
+                header('Content-Type: application/json');
+                echo json_encode(['status' => 'error', 'message' => 'Invalid input']);
+                return;
+            }
+            
+            $success = $this->messageModel->addReaction($messageId, $userId, $reactionType);
+            
+            header('Content-Type: application/json');
+            if ($success) {
+                echo json_encode(['status' => 'success']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to add reaction']);
+            }
+        }
+    }
+    
+    // New method to remove a reaction from a message
+    public function removeReaction() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate and sanitize input
+            $messageId = filter_input(INPUT_POST, 'message_id', FILTER_VALIDATE_INT);
+            $userId = filter_input(INPUT_POST, 'user_id', FILTER_VALIDATE_INT);
+            
+            if (!$messageId || !$userId) {
+                header('Content-Type: application/json');
+                echo json_encode(['status' => 'error', 'message' => 'Invalid input']);
+                return;
+            }
+            
+            $success = $this->messageModel->removeReaction($messageId, $userId);
+            
+            header('Content-Type: application/json');
+            if ($success) {
+                echo json_encode(['status' => 'success']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to remove reaction']);
+            }
+        }
+    }
 }
 
 // Handle API requests if this file is accessed directly
@@ -210,9 +294,7 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == basename(__FILE__) && isset($_GET['
             $controller->getDiscussions();
             break;
         case 'getMessages':
-            if (isset($_GET['discussion_id'])) {
-                $controller->getMessages($_GET['discussion_id']);
-            }
+            $controller->getMessages();
             break;
         case 'createDiscussion':
             $controller->createDiscussion();
@@ -231,6 +313,12 @@ if (basename($_SERVER['SCRIPT_FILENAME']) == basename(__FILE__) && isset($_GET['
             break;
         case 'deleteMessage':
             $controller->deleteMessage();
+            break;
+        case 'addReaction':
+            $controller->addReaction();
+            break;
+        case 'removeReaction':
+            $controller->removeReaction();
             break;
         default:
             header('HTTP/1.1 404 Not Found');
