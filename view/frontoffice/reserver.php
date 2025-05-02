@@ -80,6 +80,9 @@ if ($event_id) {
 </head>
 <body>
     <div class="container">
+    <div style="text-align: right; margin-bottom: 20px;">
+            <a href="vosreservations.php" class="btn-purple">Vos Réservations</a>
+        </div>
         <h1>Confirmation de réservation</h1>
 
         <?php if ($errorMessage): ?>

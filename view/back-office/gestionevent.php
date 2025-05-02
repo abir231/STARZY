@@ -80,6 +80,7 @@ h1 {
             <li><a href="dashboard.php">Dashboard</a></li>
             <li><a href="eventlistbyticket.php">Event List by Ticket</a></li>
             <li><a href="gestionevent.php">Gestion des événements</a></li>
+            <li><a href="tickets.php">Les réservations</a></li>
         </ul>
     </div>
     <div class="main-content">

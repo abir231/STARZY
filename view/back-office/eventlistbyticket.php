@@ -78,6 +78,7 @@ if ($selectedEventId) {
   <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
   <a href="eventlistbyticket.php"><i class="fas fa-list"></i> Event List by Ticket</a>
   <a href="gestionevent.php"><i class="fas fa-plus"></i> Gestion des événements</a>
+  <a href="tickets.php"><i class="fas fa-plus"></i> Les réservations</a>
 </div>
 
 <div class="main">

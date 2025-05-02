@@ -12,8 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $num_card = $_POST['num_card'] ?? '';
     $code_card = $_POST['code_card'] ?? '';
 
+    // Vérification côté serveur
     if (empty($nom) || empty($email) || empty($num_card) || empty($code_card)) {
         $errorMessage = "Tous les champs sont obligatoires.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errorMessage = "Adresse email invalide.";
+    } elseif (!preg_match('/^\d{4,16}$/', $num_card)) {
+        $errorMessage = "Numéro de carte invalide.";
+    } elseif (!preg_match('/^\d{3,4}$/', $code_card)) {
+        $errorMessage = "Code de carte invalide.";
     } else {
         // Vérifie si l'utilisateur existe
         $stmt = $pdo->prepare("SELECT user_id FROM users WHERE nom_user = ? AND email = ?");
@@ -52,12 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt->execute([$prix, $user_id, $num_card]);
 
                         // Insérer la réservation
-                        $stmt = $pdo->prepare("INSERT INTO ticket (user_id, event_id) VALUES (?, ?)");
-                        $stmt->execute([$user_id, $event_id]);
+                        $dateActuelle = date('Y-m-d H:i:s');
+                        $stmt = $pdo->prepare("INSERT INTO ticket (user_id, event_id, ticket_date) VALUES (?, ?, ?)");
+                        $stmt->execute([$user_id, $event_id, $dateActuelle]);
 
                         $successMessage = "Réservation réussie ! Redirection en cours...";
                         header("refresh:2;url=events.php");
-
                     }
                 }
             }
@@ -70,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Formulaire de Paiement</title>
+    <title>Paiement</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -150,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="message error"><?= $errorMessage ?></div>
     <?php endif; ?>
 
-    <form method="POST">
+    <form method="POST" onsubmit="return validateForm();">
         <label for="nom">Nom :</label>
         <input type="text" name="nom" id="nom" required>
 
@@ -158,13 +165,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="email" name="email" id="email" required>
 
         <label for="num_card">Numéro de carte :</label>
-        <input type="text" name="num_card" id="num_card" required pattern="\d{4,16}" title="Numéro entre 4 et 16 chiffres">
+        <input type="text" name="num_card" id="num_card" required>
 
-        <label for="code_card">Code carte :</label>
-        <input type="password" name="code_card" id="code_card" required pattern="\d{3,4}" title="Code entre 3 et 4 chiffres">
+        <label for="code_card">Code de carte :</label>
+        <input type="password" name="code_card" id="code_card" required>
 
         <button type="submit" class="btn">Confirmer la réservation</button>
     </form>
 </div>
+
+<script>
+function validateForm() {
+    const nom = document.getElementById('nom').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const num_card = document.getElementById('num_card').value.trim();
+    const code_card = document.getElementById('code_card').value.trim();
+
+    if (!nom || !email || !num_card || !code_card) {
+        alert("Tous les champs sont obligatoires.");
+        return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert("Adresse email invalide.");
+        return false;
+    }
+
+    if (!/^\d{4,16}$/.test(num_card)) {
+        alert("Numéro de carte invalide (entre 4 et 16 chiffres).");
+        return false;
+    }
+
+    if (!/^\d{3,4}$/.test(code_card)) {
+        alert("Code de carte invalide (entre 3 et 4 chiffres).");
+        return false;
+    }
+
+    return true;
+}
+</script>
 </body>
 </html>

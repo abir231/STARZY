@@ -2,15 +2,30 @@
 require_once '../../model/Config.php';
 $conn = Config::getConnection();
 
-$sql = "SELECT * FROM evenements ORDER BY event_id DESC";
-$events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+// Requête avec jointures
+$sql = "SELECT 
+            t.ticket_id, 
+            t.ticket_date, 
+            u.nom_user, 
+            u.email, 
+            e.nom_event
+        FROM 
+            ticket t
+        JOIN 
+            users u ON t.user_id = u.user_id
+        JOIN 
+            evenements e ON t.event_id = e.event_id
+        ORDER BY 
+            t.ticket_id DESC";
+
+$tickets = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Admin - Événements</title>
+    <title>Dashboard Admin - Tickets</title>
     <style>
         body {
             margin: 0;
@@ -64,14 +79,6 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             color: #fff;
         }
 
-        .add-btn {
-            padding: 10px 20px;
-            background-color: #1DB954;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-        }
-
         table {
             width: 100%;
             margin-top: 40px;
@@ -89,28 +96,12 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         }
 
         th {
-            color: #ffc107;
-            color:#fff;
+            color: #fff;
         }
 
         tr:hover {
-            background-color:aliceblue;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            margin-right: 10px;
-            color: white;
-        }
-
-        .edit-btn {
-            background-color: #ffc107;
-        }
-
-        .delete-btn {
-            background-color: #dc3545;
+            background-color: aliceblue;
+            color: black;
         }
     </style>
 </head>
@@ -121,38 +112,32 @@ $events = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     <a href="dashboard.php">Dashboard</a>
     <a href="eventlistbyticket.php">Event List by Ticket</a>
     <a href="gestionevent.php">Gestion des Événements</a>
-    <a href="tickets.php">Les réservations</a>
+    <a href="tickets.php">Gestion des Tickets</a>
 </div>
 
 <div class="main-content">
     <div class="main-header">
-        <h1>Liste des Événements</h1>
-        <a class="add-btn" href="addEvent.php">+ Ajouter un événement</a>
+        <h1>Liste des Tickets</h1>
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Date</th>
-                <th>Lieu</th>
-                <th>Description</th>
-                <th>Actions</th>
+                <th>ID Ticket</th>
+                <th>Date Ticket</th>
+                <th>Nom Utilisateur</th>
+                <th>Email</th>
+                <th>Événement</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($events as $event): ?>
+            <?php foreach ($tickets as $ticket): ?>
                 <tr>
-                    <td><?= htmlspecialchars($event['event_id']) ?></td>
-                    <td><?= htmlspecialchars($event['nom_event']) ?></td>
-                    <td><?= htmlspecialchars($event['date_event']) ?></td>
-                    <td><?= htmlspecialchars($event['location_event']) ?></td>
-                    <td style="max-width: 300px; overflow-wrap: break-word;"><?= htmlspecialchars($event['description']) ?></td>
-                    <td style="white-space: nowrap; vertical-align: middle; text-align: right;">
-                        <a class="btn edit-btn" href="updateEvent.php?event_id=<?= $event['event_id'] ?>" class="btn btn-sm btn-primary" style="margin-right: 5px;">Modifier</a>
-                        <a class="btn delete-btn" href="deleteEvent.php?event_id=<?= $event['event_id'] ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');"class="btn btn-sm btn-danger">Supprimer</a>
-                    </td>
+                    <td><?= htmlspecialchars($ticket['ticket_id']) ?></td>
+                    <td><?= htmlspecialchars($ticket['ticket_date']) ?></td>
+                    <td><?= htmlspecialchars($ticket['nom_user']) ?></td>
+                    <td><?= htmlspecialchars($ticket['email']) ?></td>
+                    <td><?= htmlspecialchars($ticket['nom_event']) ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
