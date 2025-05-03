@@ -1,4 +1,4 @@
-<?php
+<?php   
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../config/database.php';
 
@@ -6,7 +6,7 @@ class UserController {
     private $userModel;
 
     public function __construct() {
-        $this->userModel = new User(); // Initialisation du modèle User
+        $this->userModel = new User();
     }
 
     public function register($data) {
@@ -14,7 +14,7 @@ class UserController {
             $this->userModel->name = $data['name'];
             $this->userModel->email = $data['email'];
             $this->userModel->password = password_hash($data['password'], PASSWORD_DEFAULT);
-            $this->userModel->role = 'user';
+            $this->userModel->role = $data['role'] ?? 'user'; // Par défaut 'user'
             
             return $this->userModel->create();
         } catch (Exception $e) {
@@ -25,29 +25,26 @@ class UserController {
 
     public function login($data) {
         try {
+            error_log("Tentative de login avec email: " . $data['email']);
+            
             $email = $data['email'];
             $password = $data['password'];
-            
-            // Utilisation du modèle User pour la connexion
+    
             $user = $this->userModel->login($email, $password);
             
-            if (!$user) {
-                return false;
+            error_log("Résultat login: " . print_r($user, true));
+            
+            if ($user) {
+                unset($user['password']);
+                return $user;
             }
             
-            // Retourne l'utilisateur sans le mot de passe
-            unset($user['password']);
-            return $user;
-            
-        } catch (PDOException $e) {
-            error_log("Database error in login: " . $e->getMessage());
             return false;
         } catch (Exception $e) {
-            error_log("General error in login: " . $e->getMessage());
+            error_log("Erreur login: " . $e->getMessage());
             return false;
         }
     }
-
     public function getAllUsers() {
         try {
             return $this->userModel->readAll();

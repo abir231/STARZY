@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../config/database.php';
 
 class User {
-    private $conn;
+    public $conn;
     private $table = "users";
 
     public $id;
@@ -42,28 +42,42 @@ class User {
     }
 
     public function login($email, $password) {
-        $query = "SELECT * FROM " . $this->table . " WHERE email = ? LIMIT 1";
+        // 1. Valide d'abord l'email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            error_log("Email invalide: $email");
+            return false;
+        }
+    
+        // 2. Cherche l'utilisateur
+        $query = "SELECT * FROM users WHERE email = ? LIMIT 1";
         $stmt = $this->conn->prepare($query);
         
         if (!$stmt->execute([$email])) {
-            error_log("Database error: " . implode(":", $stmt->errorInfo()));
+            error_log("Erreur SQL: " . print_r($stmt->errorInfo(), true));
             return false;
         }
-        
+    
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+    
+        // 3. Debug complet
+        error_log("Tentative de login - Email: $email");
+        error_log("Utilisateur trouvé: " . print_r($user, true));
+    
+        // 4. Vérifie le mot de passe
         if ($user) {
-            // Debug: Afficher le mot de passe stocké et celui fourni
-            error_log("Stored hash: " . $user['password']);
-            error_log("Provided pass: " . $password);
+            $isValid = password_verify($password, $user['password']);
+            error_log("Résultat password_verify: " . ($isValid ? "OK" : "Échec"));
             
-            if (password_verify($password, $user['password'])) {
+            if ($isValid) {
                 return $user;
             }
         }
-        
+    
         return false;
     }
+
+    
+    
 
     public function readOne($id) {
         $query = "SELECT * FROM " . $this->table . " WHERE id = ?";
@@ -74,5 +88,36 @@ class User {
 
     public function getUserById($id) {
         return $this->readOne($id);
+    }
+
+
+
+
+    
+    public function getUserByEmail($email) {
+        $query = "SELECT * FROM " . $this->table . " WHERE email = ? LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function setPasswordResetToken($email, $token) {
+        $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $query = "UPDATE " . $this->table . " SET reset_token = ?, reset_expires = ? WHERE email = ?";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$token, $expires, $email]);
+    }
+    
+    public function getUserByResetToken($token) {
+        $query = "SELECT * FROM " . $this->table . " WHERE reset_token = ? AND reset_expires > NOW() LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$token]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function updatePassword($userId, $hashedPassword) {
+        $query = "UPDATE " . $this->table . " SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([$hashedPassword, $userId]);
     }
 }

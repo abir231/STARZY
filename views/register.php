@@ -36,6 +36,34 @@
       border-color: #28a745 !important;
     }
   </style>
+
+<?php
+session_start();
+
+// Traitement de l'inscription
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
+    require_once "../controllers/UserController.php";
+    $controller = new UserController();
+    
+    $data = [
+        'name' => $_POST['name'],
+        'email' => $_POST['email'],
+        'password' => $_POST['password'],
+        'role' => 'user' // Par défaut tous les nouveaux sont 'user'
+    ];
+    
+    if ($controller->register($data)) {
+      // Message de succès sans connexion automatique
+      $_SESSION['registration_success'] = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+      header("Location: login.php"); // Redirige toujours vers la page de login
+      exit;
+  } else {
+      $_SESSION['registration_error'] = "Erreur lors de l'inscription";
+  }
+}
+?>
+
+<!-- Le reste de votre HTML existant -->
 </head>
 <body>
 
@@ -50,7 +78,7 @@
                 <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                  <form class="mx-1 mx-md-4" action="../index.php" method="POST" id="registrationForm">
+                  <form class="mx-1 mx-md-4" action="" method="POST" id="registrationForm">
                     <input type="hidden" name="register" value="1">
                   
                     <!-- Name Field -->
