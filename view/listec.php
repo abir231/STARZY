@@ -47,6 +47,12 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
     overflow-x: hidden;    /* Évite les scrolls horizontaux */
 }
 
+/* Style for active sort button */
+.sort-btn.active {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    font-weight: bold;
+}
+
 	</style>
 <body>
 	<div class="wrapper">
@@ -71,7 +77,11 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
 							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des Commentaires </span>
 						</a>
 					</li>
-
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="statistiques.php">
+							<i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Statistiques</span>
+						</a>
+					</li>
 					<li class="sidebar-item">
 						<a class="sidebar-link" href=" ">
 							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Se
@@ -91,7 +101,7 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 
 			<main class="content">
-			<div class="container-fluid p-0 full-width">
+ 			<div class="container-fluid p-0 full-width">
 
 					<h1 class="h3 mb-3"><strong>Les Commentaire :  </strong> </h1>
 					<div class="row">
@@ -100,6 +110,14 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
 								<div class="card-header">
 
 									<h5 class="card-title mb-0"> Liste des commentaires à gérer </h5>
+									
+									<!-- Boutons de tri -->
+									<div class="sort-controls mt-3">
+										<button class="btn btn-sm btn-primary sort-btn" onclick="sortTable('default')">Par défaut</button>
+										<button class="btn btn-sm btn-success sort-btn" onclick="sortTable('rating-high')">Notes élevées</button>
+										<button class="btn btn-sm btn-warning sort-btn" onclick="sortTable('rating-low')">Notes basses</button>
+										<button class="btn btn-sm btn-info sort-btn" onclick="sortTable('date')">Date récente</button>
+									</div>
 								</div>
 								<table class="table table-hover my-0">
 									<div class="card-body px-0 pb-2">
@@ -242,228 +260,78 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
 		</div>
 	</div>
 
-	<script src="js/app.js"></script>
+	<script src="back-office/static/js/app.js"></script>
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-			var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-			gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-			gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-			// Line chart
-			new Chart(document.getElementById("chartjs-dashboard-line"), {
-				type: "line",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "Sales ($)",
-						fill: true,
-						backgroundColor: gradient,
-						borderColor: window.theme.primary,
-						data: [
-							2115,
-							1562,
-							1584,
-							1892,
-							1587,
-							1923,
-							2566,
-							2448,
-							2805,
-							3438,
-							2917,
-							3327
-						]
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					tooltips: {
-						intersect: false
-					},
-					hover: {
-						intersect: true
-					},
-					plugins: {
-						filler: {
-							propagate: false
-						}
-					},
-					scales: {
-						xAxes: [{
-							reverse: true,
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}],
-						yAxes: [{
-							ticks: {
-								stepSize: 1000
-							},
-							display: true,
-							borderDash: [3, 3],
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}]
-					}
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Pie chart
-			new Chart(document.getElementById("chartjs-dashboard-pie"), {
-				type: "pie",
-				data: {
-					labels: ["Chrome", "Firefox", "IE"],
-					datasets: [{
-						data: [4306, 3801, 1689],
-						backgroundColor: [
-							window.theme.primary,
-							window.theme.warning,
-							window.theme.danger
-						],
-						borderWidth: 5
-					}]
-				},
-				options: {
-					responsive: !window.MSInputMethodContext,
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					cutoutPercentage: 75
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Bar chart
-			new Chart(document.getElementById("chartjs-dashboard-bar"), {
-				type: "bar",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "This year",
-						backgroundColor: window.theme.primary,
-						borderColor: window.theme.primary,
-						hoverBackgroundColor: window.theme.primary,
-						hoverBorderColor: window.theme.primary,
-						data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-						barPercentage: .75,
-						categoryPercentage: .5
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					scales: {
-						yAxes: [{
-							gridLines: {
-								display: false
-							},
-							stacked: false,
-							ticks: {
-								stepSize: 20
-							}
-						}],
-						xAxes: [{
-							stacked: false,
-							gridLines: {
-								color: "transparent"
-							}
-						}]
-					}
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var markers = [{
-				coords: [31.230391, 121.473701],
-				name: "Shanghai"
-			},
-			{
-				coords: [28.704060, 77.102493],
-				name: "Delhi"
-			},
-			{
-				coords: [6.524379, 3.379206],
-				name: "Lagos"
-			},
-			{
-				coords: [35.689487, 139.691711],
-				name: "Tokyo"
-			},
-			{
-				coords: [23.129110, 113.264381],
-				name: "Guangzhou"
-			},
-			{
-				coords: [40.7127837, -74.0059413],
-				name: "New York"
-			},
-			{
-				coords: [34.052235, -118.243683],
-				name: "Los Angeles"
-			},
-			{
-				coords: [41.878113, -87.629799],
-				name: "Chicago"
-			},
-			{
-				coords: [51.507351, -0.127758],
-				name: "London"
-			},
-			{
-				coords: [40.416775, -3.703790],
-				name: "Madrid "
+		// Fonction pour trier le tableau des commentaires
+		function sortTable(sortType) {
+			// Récupérer toutes les lignes du tableau dans un array (sélection plus précise)
+			const tableRows = document.querySelectorAll('table.align-items-center tbody tr');
+			const rowsArray = Array.from(tableRows);
+			
+			// Si aucune ligne n'est trouvée, sortir
+			if (rowsArray.length === 0) {
+				alert("Aucune donnée à trier");
+				return;
 			}
-			];
-			var map = new jsVectorMap({
-				map: "world",
-				selector: "#world_map",
-				zoomButtons: true,
-				markers: markers,
-				markerStyle: {
-					initial: {
-						r: 9,
-						strokeWidth: 7,
-						stokeOpacity: .4,
-						fill: window.theme.primary
-					},
-					hover: {
-						fill: window.theme.primary,
-						stroke: window.theme.primary
-					}
-				},
-				zoomOnScroll: false
+			
+			// Mettre en surbrillance le bouton actif
+			document.querySelectorAll('.sort-btn').forEach(btn => {
+				btn.classList.remove('active');
 			});
-			window.addEventListener("resize", () => {
-				map.updateSize();
+			event.target.classList.add('active');
+			
+			// Tri par défaut - recharger la page
+			if (sortType === 'default') {
+				window.location.reload();
+				return;
+			}
+			
+			// Trier les lignes selon le critère
+			rowsArray.sort((rowA, rowB) => {
+				let valueA, valueB;
+				
+				// Colonne de l'évaluation (index 3)
+				if (sortType === 'rating-high' || sortType === 'rating-low') {
+					// Trouver la cellule de l'évaluation (4ème colonne)
+					const cellA = rowA.querySelector('td:nth-child(4)')?.textContent.trim() || "0";
+					const cellB = rowB.querySelector('td:nth-child(4)')?.textContent.trim() || "0";
+					
+					// Convertir en nombre
+					valueA = parseFloat(cellA) || 0;
+					valueB = parseFloat(cellB) || 0;
+					
+					// Ordre croissant ou décroissant
+					return sortType === 'rating-high' ? valueB - valueA : valueA - valueB;
+				}
+				
+				// Colonne de date (index 2)
+				if (sortType === 'date') {
+					// Trouver la cellule de date (3ème colonne)
+					const cellA = rowA.querySelector('td:nth-child(3)')?.textContent.trim() || "";
+					const cellB = rowB.querySelector('td:nth-child(3)')?.textContent.trim() || "";
+					
+					// Comparer les dates (plus récent en premier)
+					const dateA = new Date(cellA);
+					const dateB = new Date(cellB);
+					
+					return dateB - dateA;
+				}
+				
+				return 0;
 			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-			document.getElementById("datetimepicker-dashboard").flatpickr({
-				inline: true,
-				prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-				nextArrow: "<span title=\"Next month\">&raquo;</span>",
-				defaultDate: defaultDate
+			
+			// Récupérer le parent (tbody)
+			const tbody = tableRows[0].parentNode;
+			
+			// Détacher les lignes du DOM
+			const detachedRows = rowsArray.map(row => row.parentNode.removeChild(row));
+			
+			// Réinsérer les lignes triées
+			detachedRows.forEach(row => {
+				tbody.appendChild(row);
 			});
-		});
+		}
 	</script>
 
 </body>

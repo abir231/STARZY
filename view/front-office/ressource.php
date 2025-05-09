@@ -1,8 +1,7 @@
 <?php
-
-
+// Démarrer la session pour le captcha
+session_start();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -276,6 +275,32 @@ input:focus, select:focus, textarea:focus {
     border-color: #007bff;
 }
 
+        /* Captcha styling */
+        .captcha-container {
+            margin-bottom: 15px;
+        }
+        
+        .captcha-image {
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .refresh-captcha {
+            display: inline-block;
+            padding: 5px 10px;
+            background: rgba(0, 191, 255, 0.2);
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-captcha:hover {
+            background: rgba(0, 191, 255, 0.4);
+        }
+
         @media (max-width: 768px) {
             .livre-container {
                 grid-template-columns: 1fr;
@@ -361,6 +386,16 @@ input:focus, select:focus, textarea:focus {
         <span class="error-message"></span>
     </div>
 
+    <div class="captcha-container">
+        <label for="captcha">Code de sécurité</label>
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <img src="generate_captcha.php" alt="Captcha" class="captcha-image" id="captcha-image">
+            <a href="#" onclick="refreshCaptcha(event)" class="refresh-captcha">Rafraîchir</a>
+        </div>
+        <input type="text" id="captcha" name="captcha" placeholder="Entrez le texte affiché ci-dessus">
+        <span class="error-message captcha-error"></span>
+    </div>
+
     <button type="submit" class="btn-reserve">Ajouter la Ressource</button>
 </form>
 
@@ -396,6 +431,49 @@ input:focus, select:focus, textarea:focus {
             sections.forEach(sec => sec.classList.remove('active'));
             document.getElementById(section).classList.add('active');
         }
+        
+        // Fonction pour rafraîchir le captcha
+        function refreshCaptcha(event) {
+            event.preventDefault();
+            const captchaImg = document.getElementById('captcha-image');
+            // Ajouter un paramètre aléatoire pour éviter la mise en cache
+            captchaImg.src = 'generate_captcha.php?rand=' + Math.random();
+        }
+
+        // Gestionnaire d'erreur pour l'image du captcha
+        document.addEventListener('DOMContentLoaded', function() {
+            const captchaImg = document.getElementById('captcha-image');
+            if (captchaImg) {
+                captchaImg.onerror = function() {
+                    // Si l'image ne peut pas être chargée, utiliser le captcha texte
+                    const captchaContainer = document.querySelector('.captcha-container');
+                    
+                    // Créer un iframe pour le captcha texte
+                    const iframe = document.createElement('iframe');
+                    iframe.src = 'simple_captcha.php';
+                    iframe.style.width = '100%';
+                    iframe.style.height = '60px';
+                    iframe.style.border = 'none';
+                    iframe.style.overflow = 'hidden';
+                    
+                    // Remplacer l'image et le lien de rafraîchissement
+                    const imgContainer = document.querySelector('.captcha-container > div');
+                    imgContainer.innerHTML = '';
+                    imgContainer.appendChild(iframe);
+                    
+                    // Ajouter un bouton pour rafraîchir le captcha texte
+                    const refreshBtn = document.createElement('a');
+                    refreshBtn.href = '#';
+                    refreshBtn.className = 'refresh-captcha';
+                    refreshBtn.textContent = 'Rafraîchir';
+                    refreshBtn.onclick = function(e) {
+                        e.preventDefault();
+                        iframe.src = 'simple_captcha.php?rand=' + Math.random();
+                    };
+                    imgContainer.appendChild(refreshBtn);
+                };
+            }
+        });
     </script>
     <script src="controle_saisie.js"></script>
     </body>

@@ -1,4 +1,6 @@
 <?php
+// Démarrer la session pour accéder au mot captcha
+session_start();
 
 // Vérifier si le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -7,6 +9,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once('C:\xampp\htdocs\chaima\model\ressource.php');
 
     $ressourceC = new ressourceC();
+    
+    // Vérifier le captcha
+    if (!isset($_POST['captcha']) || !isset($_SESSION['captcha_word']) || 
+        strtolower($_POST['captcha']) !== strtolower($_SESSION['captcha_word'])) {
+        // Si le captcha n'est pas valide
+        ?>
+        <script>
+            alert("Code de sécurité incorrect. Veuillez réessayer.");
+            window.location.href = 'front-office/ressource.php';
+        </script>
+        <?php
+        exit();
+    }
+    
+    // Réinitialiser le captcha après vérification (pour éviter la réutilisation)
+    unset($_SESSION['captcha_word']);
 
     // Vérifier que tous les champs requis sont définis et non vides
     if (

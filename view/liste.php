@@ -6,10 +6,10 @@
 require_once('C:\xampp\htdocs\chaima\controller\ressourceC.php');
 
 // Create an instance of UserC class
-$ressource = new ressourceC();
+$ressourceC = new ressourceC();
 
 // Fetch the list of users
-$tab = $ressource->listRessources();
+$tab = $ressourceC->listRessources();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,18 +33,51 @@ $tab = $ressource->listRessources();
 	<link href="back-office/static/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<style>
-	.container-fluid.custom-big {
-    padding: 0rem; /* au lieu de p-0 */
-}
-.full-width {
-    width: 100vw;          /* Prend toute la largeur de la fenêtre */
-    max-width: 100vw;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;    /* Évite les scrolls horizontaux */
+ 
+
+ 	<style>
+/* Force table width to be larger than viewport */
+.table {
+    min-width: 2000px !important;
 }
 
+/* Enable horizontal scrolling on the container */
+.table-container {
+    width: 100%;
+    overflow-x: scroll !important;
+    padding-bottom: 10px;
+}
+
+/* More space in cells */
+td, th {
+    min-width: 120px;
+    padding: 10px;
+}
+
+/* Full-width card */
+.card {
+    width: 100%;
+}
+
+/* Ensure main content can scroll */
+.main {
+    overflow-x: auto !important;
+}
+
+/* Force page to have horizontal scroll */
+body {
+    overflow-x: auto !important;
+}
+
+.wrapper {
+    overflow-x: visible !important;
+}
+
+/* Style for active sort button */
+.sort-btn.active {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    font-weight: bold;
+}
 	</style>
 <body>
 	<div class="wrapper">
@@ -69,7 +102,11 @@ $tab = $ressource->listRessources();
 							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des Commentaires </span>
 						</a>
 					</li>
-
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="statistiques.php">
+							<i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Statistiques</span>
+						</a>
+					</li>
 					<li class="sidebar-item">
 						<a class="sidebar-link" href=" ">
 							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Se
@@ -89,161 +126,173 @@ $tab = $ressource->listRessources();
 
 
 			<main class="content">
-			<div class="container-fluid p-0 full-width">
+			<div class="container-fluid">
 
 					<h1 class="h3 mb-3"><strong>Les ressources :  </strong> </h1>
 					<div class="row">
-						<div class="col-12 col-lg-8 col-xxl-9 d-flex">
+						<div class="col-12 d-flex">
 							<div class="card flex-fill">
 								<div class="card-header">
 
 									<h5 class="card-title mb-0"> Liste des ressources à gérer </h5>
-								</div>
-								<table class="table table-hover my-0">
-									<div class="card-body px-0 pb-2">
-										<div class="table-responsive p-0">
-											<table class="table align-items-center mb-0">
-												<thead>
-													<tr>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															ID </th>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-															Titre </th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Type</th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Categorie </th>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Date publication</th>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-															description
-                                                        </th>
-                                                        <th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-															Reference
-                                                        </th>
-                                                        <th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-															Statut</th>
-
-
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															delete </th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Detail </th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Update</th>
-
-															<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Commentaire</th>
-
-													</tr>
-												</thead>
-												<?php
-												foreach ($tab as $ressource) {
-													?>
-													<tbody>
-														<tr>
-															<td>
-																<div class="d-flex px-2 py-1">
-																	<div class="d-flex flex-column justify-content-center">
-																		<h6 class="mb-0 text-sm">
-																			<?= $ressource['id']; ?>
-																			<!-- Utilisez les clés de tableau -->
-																		</h6>
-																	</div>
-																</div>
-															</td>
-															<td>
-																<p class="text-xs font-weight-bold mb-0">
-                                                                <?= $ressource['titre']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</p>
-															</td>
-															<td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $ressource['type_ressource']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-															<td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $ressource['categorie']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-															<td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $ressource['date_publication']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-															<td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $ressource['description']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-                                                            <td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $ressource['fichier_ou_lien']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-                                                            <td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $ressource['statut']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-															<td class="align-middle text-center text-sm">
-																<span class="badge bg-danger">
-																	<a
-																		href="delete.php?id=<?= $ressource['id']; ?>">ici</a>
-																</span>
-															</td>
-															<td class="align-middle text-center text-sm">
-																<span class="badge bg-success">
-																	<a
-																		href="show.php?id=<?= $ressource['id']; ?>">ici</a>
-																</span>
-															</td>
-															<td class="align-middle text-center text-sm">
-																<span class="badge bg-warning">
-																	<a
-																		href="update.php?id=<?= $ressource['id']; ?>">ici</a>
-																</span>
-															</td>
-															<td class="align-middle text-center text-sm">
-																<span class="badge bg-secondary">
-																	<a
-																		href="listec.php?id=<?= $ressource['id']; ?> ">ici</a>
-																</span>
-															</td>
-														</tr>
-													</tbody>
-													<?php
-												}
-												?>
-
-
-												</tbody>
-											</table>
-										</div>
+									
+									<!-- Boutons de tri -->
+									<div class="sort-controls mt-3">
+										<button class="btn btn-sm btn-primary sort-btn" onclick="sortTable('default')">Par défaut</button>
+										<button class="btn btn-sm btn-success sort-btn" onclick="sortTable('rating-high')">Meilleures évaluations</button>
+										<button class="btn btn-sm btn-warning sort-btn" onclick="sortTable('rating-low')">Faibles évaluations</button>
 									</div>
+								</div>
+								<div class="table-container">
+									<table class="table align-items-center mb-0">
+										<thead>
+											<tr>
+												<th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													ID </th>
+												<th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+													Titre </th>
+												<th
+													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													Type</th>
+												<th
+													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													Categorie </th>
+												<th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													Date publication</th>
+												<th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+													description
+                                                </th>
+                                                <th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+													Reference
+                                                </th>
+                                                <th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+													Statut</th>
 
+                                                <th
+													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+													Evaluation</th>
 
+												<th
+													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													delete </th>
+												<th
+													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													Detail </th>
+												<th
+													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													Update</th>
+
+													<th
+													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+													Commentaire</th>
+
+											</tr>
+										</thead>
+										<?php
+										foreach ($tab as $ressource) {
+											// Calculate average rating for this resource
+											$evaluation = $ressourceC->getAverageRating($ressource['id']);
+											?>
+											<tbody>
+												<tr>
+													<td>
+														<div class="d-flex px-2 py-1">
+															<div class="d-flex flex-column justify-content-center">
+																<h6 class="mb-0 text-sm">
+																	<?= $ressource['id']; ?>
+																	<!-- Utilisez les clés de tableau -->
+																</h6>
+															</div>
+														</div>
+													</td>
+													<td>
+														<p class="text-xs font-weight-bold mb-0">
+														<?= $ressource['titre']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</p>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $ressource['type_ressource']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</span>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $ressource['categorie']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</span>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $ressource['date_publication']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</span>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $ressource['description']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</span>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $ressource['fichier_ou_lien']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</span>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $ressource['statut']; ?>
+														<!-- Utilisez les clés de tableau -->
+														</span>
+													</td>
+													<td class="align-middle text-center">
+														<span class="text-secondary text-xs font-weight-bold">
+														<?= $evaluation; ?>
+														</span>
+													</td>
+													<td class="align-middle text-center text-sm">
+														<span class="badge bg-danger">
+															<a
+																href="delete.php?id=<?= $ressource['id']; ?>">ici</a>
+														</span>
+													</td>
+													<td class="align-middle text-center text-sm">
+														<span class="badge bg-success">
+															<a
+																href="show.php?id=<?= $ressource['id']; ?>">ici</a>
+														</span>
+													</td>
+													<td class="align-middle text-center text-sm">
+														<span class="badge bg-warning">
+															<a
+																href="update.php?id=<?= $ressource['id']; ?>">ici</a>
+														</span>
+													</td>
+													<td class="align-middle text-center text-sm">
+														<span class="badge bg-secondary">
+															<a
+																href="listec.php?id=<?= $ressource['id']; ?> ">ici</a>
+														</span>
+													</td>
+												</tr>
+											</tbody>
+											<?php
+										}
+										?>
+									</table>
+								</div>
 							</div>
+						</div>
+					</div>
+				</div>
 			</main>
 
 			<footer class="footer">
@@ -277,228 +326,65 @@ $tab = $ressource->listRessources();
 		</div>
 	</div>
 
-	<script src="js/app.js"></script>
+	<script src="back-office/static/js/app.js"></script>
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-			var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-			gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-			gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-			// Line chart
-			new Chart(document.getElementById("chartjs-dashboard-line"), {
-				type: "line",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "Sales ($)",
-						fill: true,
-						backgroundColor: gradient,
-						borderColor: window.theme.primary,
-						data: [
-							2115,
-							1562,
-							1584,
-							1892,
-							1587,
-							1923,
-							2566,
-							2448,
-							2805,
-							3438,
-							2917,
-							3327
-						]
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					tooltips: {
-						intersect: false
-					},
-					hover: {
-						intersect: true
-					},
-					plugins: {
-						filler: {
-							propagate: false
-						}
-					},
-					scales: {
-						xAxes: [{
-							reverse: true,
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}],
-						yAxes: [{
-							ticks: {
-								stepSize: 1000
-							},
-							display: true,
-							borderDash: [3, 3],
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}]
-					}
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Pie chart
-			new Chart(document.getElementById("chartjs-dashboard-pie"), {
-				type: "pie",
-				data: {
-					labels: ["Chrome", "Firefox", "IE"],
-					datasets: [{
-						data: [4306, 3801, 1689],
-						backgroundColor: [
-							window.theme.primary,
-							window.theme.warning,
-							window.theme.danger
-						],
-						borderWidth: 5
-					}]
-				},
-				options: {
-					responsive: !window.MSInputMethodContext,
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					cutoutPercentage: 75
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			// Bar chart
-			new Chart(document.getElementById("chartjs-dashboard-bar"), {
-				type: "bar",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "This year",
-						backgroundColor: window.theme.primary,
-						borderColor: window.theme.primary,
-						hoverBackgroundColor: window.theme.primary,
-						hoverBorderColor: window.theme.primary,
-						data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-						barPercentage: .75,
-						categoryPercentage: .5
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					scales: {
-						yAxes: [{
-							gridLines: {
-								display: false
-							},
-							stacked: false,
-							ticks: {
-								stepSize: 20
-							}
-						}],
-						xAxes: [{
-							stacked: false,
-							gridLines: {
-								color: "transparent"
-							}
-						}]
-					}
-				}
-			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var markers = [{
-				coords: [31.230391, 121.473701],
-				name: "Shanghai"
-			},
-			{
-				coords: [28.704060, 77.102493],
-				name: "Delhi"
-			},
-			{
-				coords: [6.524379, 3.379206],
-				name: "Lagos"
-			},
-			{
-				coords: [35.689487, 139.691711],
-				name: "Tokyo"
-			},
-			{
-				coords: [23.129110, 113.264381],
-				name: "Guangzhou"
-			},
-			{
-				coords: [40.7127837, -74.0059413],
-				name: "New York"
-			},
-			{
-				coords: [34.052235, -118.243683],
-				name: "Los Angeles"
-			},
-			{
-				coords: [41.878113, -87.629799],
-				name: "Chicago"
-			},
-			{
-				coords: [51.507351, -0.127758],
-				name: "London"
-			},
-			{
-				coords: [40.416775, -3.703790],
-				name: "Madrid "
+		// Fonction simplifiée pour trier le tableau des ressources
+		function sortTable(sortType) {
+			// Récupérer toutes les lignes du tableau dans un array (sélection plus précise)
+			const tableRows = document.querySelectorAll('table.align-items-center tbody tr');
+			const rowsArray = Array.from(tableRows);
+			
+			// Si aucune ligne n'est trouvée, sortir
+			if (rowsArray.length === 0) {
+				alert("Aucune donnée à trier");
+				return;
 			}
-			];
-			var map = new jsVectorMap({
-				map: "world",
-				selector: "#world_map",
-				zoomButtons: true,
-				markers: markers,
-				markerStyle: {
-					initial: {
-						r: 9,
-						strokeWidth: 7,
-						stokeOpacity: .4,
-						fill: window.theme.primary
-					},
-					hover: {
-						fill: window.theme.primary,
-						stroke: window.theme.primary
-					}
-				},
-				zoomOnScroll: false
+			
+			// Mettre en surbrillance le bouton actif
+			document.querySelectorAll('.sort-btn').forEach(btn => {
+				btn.classList.remove('active');
 			});
-			window.addEventListener("resize", () => {
-				map.updateSize();
+			event.target.classList.add('active');
+			
+			// Tri par défaut - recharger la page
+			if (sortType === 'default') {
+				window.location.reload();
+				return;
+			}
+			
+			// Trier les lignes selon le critère
+			rowsArray.sort((rowA, rowB) => {
+				let valueA, valueB;
+				
+				// Colonne de l'évaluation (index 8)
+				if (sortType === 'rating-high' || sortType === 'rating-low') {
+					// Trouver la cellule de l'évaluation (9ème colonne)
+					const cellA = rowA.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
+					const cellB = rowB.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
+					
+					// Convertir en nombre (considérer 'N/A' comme 0)
+					valueA = cellA === 'N/A' ? 0 : parseFloat(cellA) || 0;
+					valueB = cellB === 'N/A' ? 0 : parseFloat(cellB) || 0;
+					
+					// Ordre croissant ou décroissant
+					return sortType === 'rating-high' ? valueB - valueA : valueA - valueB;
+				}
+				
+				return 0;
 			});
-		});
-	</script>
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-			document.getElementById("datetimepicker-dashboard").flatpickr({
-				inline: true,
-				prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-				nextArrow: "<span title=\"Next month\">&raquo;</span>",
-				defaultDate: defaultDate
+			
+			// Récupérer le parent (tbody)
+			const tbody = tableRows[0].parentNode;
+			
+			// Détacher les lignes du DOM
+			const detachedRows = rowsArray.map(row => row.parentNode.removeChild(row));
+			
+			// Réinsérer les lignes triées
+			detachedRows.forEach(row => {
+				tbody.appendChild(row);
 			});
-		});
+		}
 	</script>
 
 </body>

@@ -91,5 +91,84 @@ class CommentaireC
             return null;
         }
     }
+
+    // Statistiques
+    
+    // Obtenir le nombre total de commentaires
+    public function getTotalComments()
+    {
+        $sql = "SELECT COUNT(*) as total FROM commentaire";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            $result = $query->fetch();
+            return $result['total'];
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return 0;
+        }
+    }
+    
+    // Obtenir la répartition des notes
+    public function getRatingDistribution()
+    {
+        $sql = "SELECT note, COUNT(*) as total FROM commentaire GROUP BY note ORDER BY note";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir la moyenne globale des notes
+    public function getOverallAverageRating()
+    {
+        $sql = "SELECT AVG(note) as moyenne FROM commentaire";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            $result = $query->fetch();
+            return $result['moyenne'] ? round($result['moyenne'], 1) : 'N/A';
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return 'N/A';
+        }
+    }
+    
+    // Obtenir les commentaires par mois
+    public function getCommentsByMonth()
+    {
+        $sql = "SELECT DATE_FORMAT(datec, '%Y-%m') as mois, COUNT(*) as total 
+                FROM commentaire 
+                GROUP BY mois 
+                ORDER BY mois";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir les ressources avec le plus grand nombre de commentaires
+    public function getMostCommentedResources($limit = 5)
+    {
+        $sql = "SELECT id, COUNT(*) as total FROM commentaire GROUP BY id ORDER BY total DESC LIMIT :limit";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $query->execute();
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
 }
 ?>

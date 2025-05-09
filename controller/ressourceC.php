@@ -106,5 +106,126 @@ class ressourceC
 
         return $query->execute();
     }
+
+    // Calculer la moyenne des notes pour une ressource
+    public function getAverageRating($id)
+    {
+        $sql = "SELECT AVG(note) as moyenne FROM commentaire WHERE id = :id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindValue(':id', $id);
+            $query->execute();
+            $result = $query->fetch();
+            return $result['moyenne'] ? round($result['moyenne'], 1) : 'N/A';
+        } catch (Exception $e) {
+            return 'N/A';
+        }
+    }
+
+    // Statistiques
+    
+    // Obtenir le nombre de ressources par catégorie
+    public function getResourcesByCategory()
+    {
+        $sql = "SELECT categorie, COUNT(*) as total FROM ressource GROUP BY categorie ORDER BY total DESC";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir le nombre de ressources par type
+    public function getResourcesByType()
+    {
+        $sql = "SELECT type_ressource, COUNT(*) as total FROM ressource GROUP BY type_ressource ORDER BY total DESC";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir les ressources les mieux notées
+    public function getTopRatedResources($limit = 5)
+    {
+        $sql = "SELECT r.id, r.titre, AVG(c.note) as moyenne 
+                FROM ressource r 
+                LEFT JOIN commentaire c ON r.id = c.id 
+                GROUP BY r.id, r.titre 
+                HAVING moyenne IS NOT NULL 
+                ORDER BY moyenne DESC 
+                LIMIT :limit";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $query->execute();
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir les ressources les plus commentées
+    public function getMostCommentedResources($limit = 5)
+    {
+        $sql = "SELECT r.id, r.titre, COUNT(c.idc) as nb_commentaires 
+                FROM ressource r 
+                LEFT JOIN commentaire c ON r.id = c.id 
+                GROUP BY r.id, r.titre 
+                ORDER BY nb_commentaires DESC 
+                LIMIT :limit";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $query->execute();
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir les statistiques de ressources par mois
+    public function getResourcesByMonth()
+    {
+        $sql = "SELECT DATE_FORMAT(date_publication, '%Y-%m') as mois, COUNT(*) as total 
+                FROM ressource 
+                GROUP BY mois 
+                ORDER BY mois";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return [];
+        }
+    }
+    
+    // Obtenir le nombre total de ressources
+    public function getTotalResources()
+    {
+        $sql = "SELECT COUNT(*) as total FROM ressource";
+        $db = config::getConnexion();
+        try {
+            $query = $db->query($sql);
+            $result = $query->fetch();
+            return $result['total'];
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+            return 0;
+        }
+    }
 }
 ?>

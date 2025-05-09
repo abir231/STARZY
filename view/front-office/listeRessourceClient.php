@@ -109,6 +109,57 @@ $listeressource = $controller->listRessources();
         .content.active {
             display: block;
         }
+
+        /* Style pour l'évaluation */
+        .evaluation {
+            margin: 10px 0;
+            padding: 5px 10px;
+            background-color: rgba(0, 191, 255, 0.2);
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .evaluation-high {
+            color: #00ff00;
+        }
+
+        .evaluation-medium {
+            color: #ffff00;
+        }
+
+        .evaluation-low {
+            color: #ff6600;
+        }
+
+        /* Styles pour les boutons de tri */
+        .sort-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sort-btn {
+            background: rgba(0, 191, 255, 0.2);
+            color: #e0e0e0;
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .sort-btn:hover {
+            background: rgba(0, 191, 255, 0.4);
+        }
+
+        .sort-btn.active {
+            background: rgba(0, 191, 255, 0.6);
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -131,39 +182,17 @@ $listeressource = $controller->listRessources();
         <h2>🔧 Ressources</h2>
         <p>Découvrez une sélection de ressources pratiques pour apprendre et explorer.</p>
 
-        <!-- Conteneur pour les ressources -->
-        <div class="ressource-container">
-            <?php
-            foreach ($listeressource as $row) {
-                if ($row['statut'] == 'publie') {
-                $ressource = new ressource(
-                    $row['id'],
-                    $row['titre'],
-                    $row['type_ressource'],
-                    $row['categorie'],
-                    $row['date_publication'],
-                    $row['description'],
-                    $row['fichier_ou_lien'],
-                    $row['statut']
-                );
-                ?>
-             <div class="ressource-card">
-    <h3><?php echo htmlspecialchars($ressource->getTitre()); ?></h3>
-    <p><strong>Categorie :</strong> <?php echo htmlspecialchars($ressource->getCategorie()); ?></p>
-    <p><strong>Date de publication :</strong> <?php echo htmlspecialchars($ressource->getDatePublication()); ?></p>
-    <p><strong>Description :</strong> <?php echo htmlspecialchars($ressource->getDescription()); ?></p>
-    <a href="<?php echo htmlspecialchars($ressource->getFichierOuLien()); ?>" target="_blank">ressource</a>
- <!-- Bouton pour commenter -->
- <div class="text-center mt-2">
-                        <a class="btn btn-sm btn-outline-dark" href="../ajoutc.php?id=<?= $ressource->getId(); ?>">Commenter</a>
-                    </div>
-            </div>
+        <!-- Options de tri -->
+        <div class="sort-options">
+            <button class="sort-btn" onclick="sortResources('default')">Par défaut</button>
+            <button class="sort-btn" onclick="sortResources('rating-high')">Meilleures évaluations</button>
+            <button class="sort-btn" onclick="sortResources('rating-low')">Faibles évaluations</button>
+            <button class="sort-btn" onclick="sortResources('date-new')">Plus récentes</button>
+        </div>
 
-                <?php
-                
-            }
-        }
-            ?>
+        <!-- Conteneur pour les ressources -->
+        <div class="ressource-container" id="ressourceContainer">
+            <!-- Resources will be loaded by JavaScript -->
         </div>
     </div>
 
@@ -197,6 +226,126 @@ $listeressource = $controller->listRessources();
             sections.forEach(sec => sec.classList.remove('active'));
             document.getElementById(section).classList.add('active');
         }
+
+        // Données des ressources
+        const ressources = [
+            <?php
+            foreach ($listeressource as $row) {
+                if ($row['statut'] == 'publie') {
+                    $ressource = new ressource(
+                        $row['id'],
+                        $row['titre'],
+                        $row['type_ressource'],
+                        $row['categorie'],
+                        $row['date_publication'],
+                        $row['description'],
+                        $row['fichier_ou_lien'],
+                        $row['statut']
+                    );
+                    $rating = $controller->getAverageRating($ressource->getId());
+                    $ratingValue = ($rating == 'N/A') ? 0 : floatval($rating);
+                    ?>
+                    {
+                        id: <?php echo json_encode($ressource->getId()); ?>,
+                        titre: <?php echo json_encode($ressource->getTitre()); ?>,
+                        categorie: <?php echo json_encode($ressource->getCategorie()); ?>,
+                        datePublication: <?php echo json_encode($ressource->getDatePublication()); ?>,
+                        description: <?php echo json_encode($ressource->getDescription()); ?>,
+                        fichierOuLien: <?php echo json_encode($ressource->getFichierOuLien()); ?>,
+                        rating: <?php echo json_encode($rating); ?>,
+                        ratingValue: <?php echo $ratingValue; ?>
+                    },
+                    <?php
+                }
+            }
+            ?>
+        ];
+
+        // Fonction pour trier les ressources
+        function sortResources(sortType) {
+            // Marquer le bouton actif
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Copier le tableau pour ne pas modifier l'original
+            let sortedResources = [...ressources];
+
+            // Trier selon le critère
+            switch(sortType) {
+                case 'rating-high':
+                    sortedResources.sort((a, b) => {
+                        // S'assurer que les valeurs sont numériques et gérer N/A
+                        const valueA = a.rating === 'N/A' ? 0 : parseFloat(a.rating) || 0;
+                        const valueB = b.rating === 'N/A' ? 0 : parseFloat(b.rating) || 0;
+                        return valueB - valueA;
+                    });
+                    break;
+                case 'rating-low':
+                    sortedResources.sort((a, b) => {
+                        // S'assurer que les valeurs sont numériques et gérer N/A
+                        const valueA = a.rating === 'N/A' ? 0 : parseFloat(a.rating) || 0;
+                        const valueB = b.rating === 'N/A' ? 0 : parseFloat(b.rating) || 0;
+                        return valueA - valueB;
+                    });
+                    break;
+                case 'date-new':
+                    sortedResources.sort((a, b) => {
+                        // Convertir les chaînes de date en objets Date
+                        const dateA = new Date(a.datePublication);
+                        const dateB = new Date(b.datePublication);
+                        return dateB - dateA;
+                    });
+                    break;
+                default:
+                    // Pas de tri, garder l'ordre d'origine
+                    break;
+            }
+
+            // Afficher les ressources triées
+            displayResources(sortedResources);
+        }
+
+        // Fonction pour afficher les ressources
+        function displayResources(resourceList) {
+            const container = document.getElementById('ressourceContainer');
+            container.innerHTML = '';
+
+            resourceList.forEach(resource => {
+                // Déterminer la classe CSS pour l'évaluation
+                let ratingClass = '';
+                if (resource.rating !== 'N/A') {
+                    if (parseFloat(resource.rating) >= 4) {
+                        ratingClass = 'evaluation-high';
+                    } else if (parseFloat(resource.rating) >= 3) {
+                        ratingClass = 'evaluation-medium';
+                    } else {
+                        ratingClass = 'evaluation-low';
+                    }
+                }
+
+                const card = document.createElement('div');
+                card.className = 'ressource-card';
+                card.innerHTML = `
+                    <h3>${resource.titre}</h3>
+                    <p><strong>Categorie :</strong> ${resource.categorie}</p>
+                    <p><strong>Date de publication :</strong> ${resource.datePublication}</p>
+                    <p><strong>Description :</strong> ${resource.description}</p>
+                    <p><strong>Evaluation :</strong> <span class="evaluation ${ratingClass}">${resource.rating}/5</span></p>
+                    <a href="${resource.fichierOuLien}" target="_blank">ressource</a>
+                    <div class="text-center mt-2">
+                        <a class="btn btn-sm btn-outline-dark" href="../ajoutc.php?id=${resource.id}">Commenter</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Afficher les ressources au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            displayResources(ressources);
+        });
     </script>
 
 </body>
