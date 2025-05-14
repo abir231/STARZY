@@ -5,8 +5,8 @@ session_start();
 // Vérifier si le formulaire est soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Inclure les fichiers nécessaires
-    require_once('C:\xampp\htdocs\chaima\controller\ressourceC.php');
-    require_once('C:\xampp\htdocs\chaima\model\ressource.php');
+    require_once('C:\xampp\htdocs\integration\controller\ressourceC.php');
+    require_once('C:\xampp\htdocs\integration\model\ressource.php');
 
     $ressourceC = new ressourceC();
     
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ressourceC->addRessource($ressource);
 
         // Rediriger vers la liste des ressources
-        header('Location: /chaima/view/front-office/listeRessourceClient.php');
+        header('Location: /integration/view/front-office/listeRessourceClient.php');
         exit();
     } else {
         // Si les champs sont invalides ou manquants

@@ -1,8 +1,8 @@
 <?php
 $rid = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-require_once('C:\xampp\htdocs\chaima\controller\commentaireC.php');
-require_once('C:\xampp\htdocs\chaima\model\ressource.php'); // si tu en as besoin
+require_once('C:\xampp\htdocs\integration\controller\commentaireC.php');
+require_once('C:\xampp\htdocs\integration\model\ressource.php'); // si tu en as besoin
 
 $commentaireC = new commentaireC();
 $commentaires = $commentaireC->listCommentaires();
@@ -50,9 +50,41 @@ $commentaires = $commentaireC->listCommentaires();
             background-color: rgba(0, 191, 255, 0.4);
             color: white;
         }
+
+        /* Style pour les boutons de navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, rgba(0, 191, 255, 0.2), rgba(138, 43, 226, 0.2));
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            color: #00BFFF;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(45deg, rgba(0, 191, 255, 0.4), rgba(138, 43, 226, 0.4));
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
+    <!-- Boutons de navigation -->
+    <div class="nav-buttons">
+        <a href="front-office/listeRessourceClient.php" class="nav-btn">🔙 Retour aux Ressources</a>
+        <a href="designe.php" class="nav-btn">🏠 Retour à l'Accueil</a>
+    </div>
 
     <h2>Commentaires associés</h2>
 

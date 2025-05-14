@@ -3,7 +3,7 @@
 
 
 // Include the necessary userC.php file
-require_once('C:\xampp\htdocs\chaima\controller\commentaireC.php');
+require_once('C:\xampp\htdocs\integration\controller\commentaireC.php');
 
 // Create an instance of UserC class
 $commentaire = new commentaireC();
@@ -14,242 +14,263 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords"
-		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>STARZY - Gestion des Commentaires</title>
+	
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font Awesome for icons -->
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	
+	<style>
+		:root {
+			--primary-color: #0f0c29;
+			--secondary-color: #1a237e;
+			--accent-color: rgb(207, 144, 165);
+			--text-light: #ffffff;
+		}
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+		body {
+			background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+			color: var(--text-light);
+			font-family: Arial, sans-serif;
+			min-height: 100vh;
+		}
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+		.wrapper {
+			display: flex;
+			min-height: 100vh;
+		}
 
-	<title>Starzy</title>
+		/* Sidebar Styles */
+		.sidebar {
+			width: 250px;
+			background: rgba(15, 12, 41, 0.95);
+			padding: 20px 0;
+		}
 
-	<link href="back-office/static/css/app.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
-<style>
-	.container-fluid.custom-big {
-    padding: 0rem; /* au lieu de p-0 */
-}
-.full-width {
-    width: 100vw;          /* Prend toute la largeur de la fenêtre */
-    max-width: 100vw;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;    /* Évite les scrolls horizontaux */
-}
+		.sidebar-brand {
+			padding: 20px;
+			text-align: center;
+			color: var(--text-light);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
 
-/* Style for active sort button */
-.sort-btn.active {
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    font-weight: bold;
-}
+		.sidebar-link {
+			display: block;
+			padding: 12px 20px;
+			color: var(--text-light);
+			text-decoration: none;
+			transition: all 0.3s;
+		}
 
+		.sidebar-link:hover,
+		.sidebar-link.active {
+			background: rgba(255, 255, 255, 0.1);
+			color: var(--accent-color);
+		}
+
+		/* Main Content Styles */
+		.main {
+			flex: 1;
+			padding: 20px;
+		}
+
+		.card {
+			background: rgba(15, 12, 41, 0.95);
+			border-radius: 10px;
+			box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			margin-bottom: 20px;
+		}
+
+		.card-header {
+			padding: 15px 20px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		/* Table Styles */
+		.table {
+			color: var(--text-light);
+		}
+
+		.table th {
+			background: rgba(26, 35, 126, 0.3);
+			border-color: rgba(255, 255, 255, 0.1);
+			font-weight: 600;
+			text-transform: uppercase;
+			font-size: 0.75rem;
+			letter-spacing: 0.5px;
+		}
+
+		.table td {
+			border-color: rgba(255, 255, 255, 0.1);
+			vertical-align: middle;
+		}
+
+		.table tr:hover {
+			background: rgba(255, 255, 255, 0.05);
+		}
+
+		/* Button Styles */
+		.btn {
+			padding: 6px 12px;
+			border-radius: 4px;
+			transition: all 0.3s;
+			text-decoration: none;
+			font-size: 0.875rem;
+		}
+
+		.sort-controls {
+			margin-bottom: 20px;
+		}
+
+		.sort-btn {
+			margin-right: 5px;
+			background: transparent;
+			border: 1px solid var(--accent-color);
+			color: var(--text-light);
+			padding: 5px 10px;
+		}
+
+		.sort-btn:hover,
+		.sort-btn.active {
+			background: var(--accent-color);
+			color: var(--primary-color);
+		}
+
+		.badge {
+			padding: 5px 10px;
+			border-radius: 15px;
+			font-weight: 500;
+			text-decoration: none;
+			display: inline-block;
+		}
+
+		.badge.bg-danger {
+			background: linear-gradient(135deg, #dc3545, #b02a37) !important;
+		}
+
+		.badge.bg-success {
+			background: linear-gradient(135deg, #198754, #146c43) !important;
+		}
+
+		.badge a {
+			color: var(--text-light);
+			text-decoration: none;
+		}
+
+		/* Footer Styles */
+		.footer {
+			padding: 20px;
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+			margin-top: auto;
+		}
 	</style>
+</head>
+
 <body>
 	<div class="wrapper">
-		<nav id="sidebar" class="sidebar js-sidebar">
-			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="index.html">
-					<span class="align-middle">Starzy</span>
+		<!-- Sidebar -->
+		<nav class="sidebar">
+			<div class="sidebar-brand">
+				<h2>STARZY</h2>
+			</div>
+			<div class="sidebar-menu">
+				<a href="indiv.php" class="sidebar-link">
+					<i class="fa fa-dashboard"></i> Tableau de bord
 				</a>
-
-				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-
-					</li>
-
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="liste.php">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des ressources </span>
-						</a>
-					</li>
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="listeco.php">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des Commentaires </span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="statistiques.php">
-							<i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Statistiques</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href=" ">
-							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Se
-								deconnecter</span>
-						</a>
-					</li>
-
-
-
-
-
-
+				<a href="liste.php" class="sidebar-link">
+					<i class="fa fa-book"></i> Ressources
+				</a>
+				<a href="listeco.php" class="sidebar-link active">
+					<i class="fa fa-comments"></i> Commentaires
+				</a>
+				<a href="statistiques.php" class="sidebar-link">
+					<i class="fa fa-bar-chart"></i> Statistiques
+				</a>
 			</div>
 		</nav>
 
+		<!-- Main Content -->
 		<div class="main">
-
-
-			<main class="content">
-			<div class="container-fluid p-0 full-width">
-
-					<h1 class="h3 mb-3"><strong>Les Commentaire :  </strong> </h1>
-					<div class="row">
-						<div class="col-12 col-lg-8 col-xxl-9 d-flex">
-							<div class="card flex-fill">
-								<div class="card-header">
-
-									<h5 class="card-title mb-0"> Liste des commentaires à gérer </h5>
-									
-									<!-- Boutons de tri -->
-									<div class="sort-controls mt-3">
-										<button class="btn btn-sm btn-primary sort-btn" onclick="sortTable('default')">Par défaut</button>
-										<button class="btn btn-sm btn-success sort-btn" onclick="sortTable('rating-high')">Notes élevées</button>
-										<button class="btn btn-sm btn-warning sort-btn" onclick="sortTable('rating-low')">Notes basses</button>
-										<button class="btn btn-sm btn-info sort-btn" onclick="sortTable('date')">Date récente</button>
-									</div>
-								</div>
-								<table class="table table-hover my-0">
-									<div class="card-body px-0 pb-2">
-										<div class="table-responsive p-0">
-											<table class="table align-items-center mb-0">
-												<thead>
-													<tr>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															ID  commentaire</th>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-															Contenu  </th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Date creation </th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Evaluation  </th>
-														<th
-															class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															ID ressource </th>
-												 
-                                              
-
-
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															delete </th>
-														<th
-															class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-															Detail </th>
-											 
- 
-
-													</tr>
-												</thead>
-												<?php
-												foreach ($tab as $commentaire) {
- 
-													?>
-													<tbody>
-														<tr>
-															<td>
-																<div class="d-flex px-2 py-1">
-																	<div class="d-flex flex-column justify-content-center">
-																		<h6 class="mb-0 text-sm">
-																			<?= $commentaire['idc']; ?>
-																			<!-- Utilisez les clés de tableau -->
-																		</h6>
-																	</div>
-																</div>
-															</td>
-															<td>
-																<p class="text-xs font-weight-bold mb-0">
-                                                                <?= $commentaire['contenu']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</p>
-															</td>
-															<td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $commentaire['datec']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-															<td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $commentaire['note']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-												 
-														 
-                                                    
-                                                            <td class="align-middle text-center">
-																<span class="text-secondary text-xs font-weight-bold">
-                                                                <?= $commentaire['id']; ?>
-                                                                <!-- Utilisez les clés de tableau -->
-																</span>
-															</td>
-															<td class="align-middle text-center text-sm">
-																<span class="badge bg-danger">
-																	<a
-																		href="deletec.php?idc=<?= $commentaire['idc']; ?> &id=<?= $commentaire['id']; ?>"  >ici</a>
-																</span>
-															</td>
-															<td class="align-middle text-center text-sm">
-																<span class="badge bg-success">
-																	<a
-																		href="showc.php?idc=<?= $commentaire['idc']; ?> &id=<?= $commentaire['id']; ?>">ici</a>
-																</span>
-															</td>
-														 
-														</tr>
-													</tbody>
-													<?php
-												}
-                                            
-												?>
-
-
-												</tbody>
-											</table>
-										</div>
-									</div>
-
-
-							</div>
-			</main>
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Liste des commentaires</h4>
+					<div class="sort-controls">
+						<button class="btn sort-btn" onclick="sortTable('default')">Par défaut</button>
+						<button class="btn sort-btn" onclick="sortTable('rating-high')">Notes élevées</button>
+						<button class="btn sort-btn" onclick="sortTable('rating-low')">Notes basses</button>
+						<button class="btn sort-btn" onclick="sortTable('date')">Date récente</button>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table align-items-center">
+							<thead>
+								<tr>
+									<th>ID Commentaire</th>
+									<th>Contenu</th>
+									<th>Date création</th>
+									<th>Évaluation</th>
+									<th>ID Ressource</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($tab as $commentaire) { ?>
+								<tr>
+									<td><?= htmlspecialchars($commentaire['idc']) ?></td>
+									<td><?= htmlspecialchars($commentaire['contenu']) ?></td>
+									<td><?= htmlspecialchars($commentaire['datec']) ?></td>
+									<td>
+										<?= number_format(floatval($commentaire['note']), 1) ?>
+										<i class="fa fa-star" style="color: #ffc107;"></i>
+									</td>
+									<td><?= htmlspecialchars($commentaire['id']) ?></td>
+									<td>
+										<a href="showc.php?idc=<?= $commentaire['idc'] ?>&id=<?= $commentaire['id'] ?>" 
+										   class="btn btn-info btn-sm" title="Voir">
+											<i class="fa fa-eye"></i>
+										</a>
+										<a href="deletec.php?idc=<?= $commentaire['idc'] ?>&id=<?= $commentaire['id'] ?>" 
+										   class="btn btn-danger btn-sm" title="Supprimer"
+										   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')">
+											<i class="fa fa-trash"></i>
+										</a>
+									</td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 
 			<footer class="footer">
 				<div class="container-fluid">
-					<div class="row text-muted">
-						<div class="col-6 text-start">
+					<div class="row">
+						<div class="col-6">
 							<p class="mb-0">
-								<a class="text-muted" href="https://adminkit.io/"
-									target="_blank"><strong>CultuRevive</strong></a> &copy;
+								<strong>Starzy</strong> &copy; <?= date('Y') ?>
 							</p>
 						</div>
 						<div class="col-6 text-end">
-							<ul class="list-inline">
+							<ul class="list-inline mb-0">
 								<li class="list-inline-item">
-									<a class="text-muted" href=" " target="_blank">Support</a>
+									<a href="#" class="text-light">Support</a>
 								</li>
 								<li class="list-inline-item">
-									<a class="text-muted" href=" " target="_blank">Help Center</a>
+									<a href="#" class="text-light">Centre d'aide</a>
 								</li>
 								<li class="list-inline-item">
-									<a class="text-muted" href="  " target="_blank">Privacy</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href=" " target="_blank">Terms</a>
+									<a href="#" class="text-light">Confidentialité</a>
 								</li>
 							</ul>
 						</div>
@@ -259,80 +280,47 @@ $id  = isset($_GET['id']) ? intval($_GET['id']) : 0;
 		</div>
 	</div>
 
-	<script src="back-office/static/js/app.js"></script>
+	<!-- Essential Scripts -->
+	<script src="js/vendor/jquery-1.12.4.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 
 	<script>
-		// Fonction simplifiée pour trier le tableau des commentaires
 		function sortTable(sortType) {
-			// Récupérer toutes les lignes du tableau dans un array (sélection plus précise)
-			const tableRows = document.querySelectorAll('table.align-items-center tbody tr');
-			const rowsArray = Array.from(tableRows);
+			const tbody = document.querySelector('table.align-items-center tbody');
+			const rows = Array.from(tbody.querySelectorAll('tr'));
 			
-			// Si aucune ligne n'est trouvée, sortir
-			if (rowsArray.length === 0) {
-				alert("Aucune donnée à trier");
-				return;
-			}
-			
-			// Mettre en surbrillance le bouton actif
+			// Update active button state
 			document.querySelectorAll('.sort-btn').forEach(btn => {
 				btn.classList.remove('active');
 			});
 			event.target.classList.add('active');
 			
-			// Tri par défaut - recharger la page
+			// Return to default order
 			if (sortType === 'default') {
 				window.location.reload();
 				return;
 			}
 			
-			// Trier les lignes selon le critère
-			rowsArray.sort((rowA, rowB) => {
-				let valueA, valueB;
+			rows.sort((a, b) => {
+				let aValue, bValue;
 				
-				// Colonne de l'évaluation (index 3)
-				if (sortType === 'rating-high' || sortType === 'rating-low') {
-					// Trouver la cellule de l'évaluation (4ème colonne)
-					const cellA = rowA.querySelector('td:nth-child(4)')?.textContent.trim() || "0";
-					const cellB = rowB.querySelector('td:nth-child(4)')?.textContent.trim() || "0";
-					
-					// Convertir en nombre
-					valueA = parseFloat(cellA) || 0;
-					valueB = parseFloat(cellB) || 0;
-					
-					// Ordre croissant ou décroissant
-					return sortType === 'rating-high' ? valueB - valueA : valueA - valueB;
+				switch(sortType) {
+					case 'rating-high':
+					case 'rating-low':
+						aValue = parseFloat(a.querySelector('td:nth-child(4)').textContent);
+						bValue = parseFloat(b.querySelector('td:nth-child(4)').textContent);
+						return sortType === 'rating-high' ? bValue - aValue : aValue - bValue;
+						
+					case 'date':
+						aValue = new Date(a.querySelector('td:nth-child(3)').textContent);
+						bValue = new Date(b.querySelector('td:nth-child(3)').textContent);
+						return bValue - aValue;
 				}
-				
-				// Colonne de date (index 2)
-				if (sortType === 'date') {
-					// Trouver la cellule de date (3ème colonne)
-					const cellA = rowA.querySelector('td:nth-child(3)')?.textContent.trim() || "";
-					const cellB = rowB.querySelector('td:nth-child(3)')?.textContent.trim() || "";
-					
-					// Comparer les dates (plus récent en premier)
-					const dateA = new Date(cellA);
-					const dateB = new Date(cellB);
-					
-					return dateB - dateA;
-				}
-				
-				return 0;
 			});
 			
-			// Récupérer le parent (tbody)
-			const tbody = tableRows[0].parentNode;
-			
-			// Détacher les lignes du DOM
-			const detachedRows = rowsArray.map(row => row.parentNode.removeChild(row));
-			
-			// Réinsérer les lignes triées
-			detachedRows.forEach(row => {
-				tbody.appendChild(row);
-			});
+			// Clear and re-append sorted rows
+			rows.forEach(row => tbody.appendChild(row));
 		}
 	</script>
-
 </body>
-
 </html>

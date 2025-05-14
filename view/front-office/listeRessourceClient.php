@@ -10,7 +10,7 @@ $listeressource = $controller->listRessources();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Starzy - Tutoriels & Livres</title>
+    <title>Starzy - Ressources</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
         * {
@@ -27,10 +27,11 @@ $listeressource = $controller->listRessources();
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            padding: 20px;
         }
 
-        /* Section des livres et ressources (cartes) */
-        .livre-container, .ressource-container {
+        /* Section des ressources (cartes) */
+        .ressource-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 2rem;
@@ -39,7 +40,7 @@ $listeressource = $controller->listRessources();
             margin: 0 auto;
         }
 
-        .livre-card, .ressource-card {
+        .ressource-card {
             background: rgba(255, 255, 255, 0.1);
             padding: 1rem;
             border-radius: 15px;
@@ -55,14 +56,7 @@ $listeressource = $controller->listRessources();
             overflow: hidden;
         }
 
-        .livre-card img, .ressource-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .livre-card a, .ressource-card a {
+        .ressource-card a {
             color: #00BFFF;
             text-decoration: none;
             font-size: 1.2rem;
@@ -70,44 +64,12 @@ $listeressource = $controller->listRessources();
             border-radius: 8px;
             transition: all 0.3s ease;
             background: rgba(0, 191, 255, 0.2);
+            margin-top: 10px;
         }
 
-        .livre-card a:hover, .ressource-card a:hover {
+        .ressource-card a:hover {
             color: #FFFFFF;
             background: rgba(0, 191, 255, 0.4);
-        }
-
-        /* Style spécifique au contenu */
-        .sidebar {
-            position: fixed;
-            right: -180px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 240px;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border-radius: 15px 0 0 15px;
-            box-shadow: -5px 0 30px rgba(0, 191, 255, 0.3);
-            transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Autres styles */
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            margin: 2rem 0;
-            font-size: 2.5rem;
-            text-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
-        }
-
-        .content {
-            display: none;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .content.active {
-            display: block;
         }
 
         /* Style pour l'évaluation */
@@ -138,7 +100,7 @@ $listeressource = $controller->listRessources();
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
         .sort-btn {
@@ -160,193 +122,163 @@ $listeressource = $controller->listRessources();
             background: rgba(0, 191, 255, 0.6);
             box-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
         }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+        }
+
+        .header-text {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Style pour le bouton Home */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 191, 255, 0.2);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            color: #e0e0e0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .home-button:hover {
+            background: rgba(0, 191, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+        }
+
+        /* Style pour le bouton d'ajout de ressource */
+        .add-resource-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 191, 255, 0.2);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            color: #e0e0e0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .add-resource-button:hover {
+            background: rgba(0, 191, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+        }
     </style>
 </head>
 <body>
+    <!-- Bouton Home -->
+    <a href="../designe.php" class="home-button">🏠 Accueil</a>
 
-    <nav class="sidebar">
-        <ul class="nav-links">
-            <li><a href="#" onclick="showSection('accueil')">🚀 Accueil</a></li>
-            <li><a href="#" onclick="showSection('tutoriels')">📚 Tutoriels</a></li>
-            <li><a href="#" onclick="showSection('livres')">📖 Livres</a></li>
-            <li><a href="#" onclick="showSection('ressources')">🔧 Ressources</a></li>
-        </ul>
-    </nav>
+    <!-- Bouton Ajouter Ressource -->
+    <a href="../front-office/ressource.php" class="add-resource-button">➕ Ajouter Ressource</a>
 
-    <div id="accueil" class="content active">
-        <h2>Bienvenue sur Starzy</h2>
-        <p>Découvrez l'univers fascinant de l'astronomie et des sciences.</p>
+    <h2>🔧 Ressources</h2>
+    <p class="header-text">Découvrez une sélection de ressources pratiques pour apprendre et explorer.</p>
+
+    <!-- Options de tri -->
+    <div class="sort-options">
+        <button class="sort-btn active" onclick="sortResources('default')">Par défaut</button>
+        <button class="sort-btn" onclick="sortResources('rating-high')">Meilleures évaluations</button>
+        <button class="sort-btn" onclick="sortResources('rating-low')">Faibles évaluations</button>
+        <button class="sort-btn" onclick="sortResources('date-new')">Plus récentes</button>
     </div>
 
-    <div id="ressources" class="content">
-        <h2>🔧 Ressources</h2>
-        <p>Découvrez une sélection de ressources pratiques pour apprendre et explorer.</p>
-
-        <!-- Options de tri -->
-        <div class="sort-options">
-            <button class="sort-btn" onclick="sortResources('default')">Par défaut</button>
-            <button class="sort-btn" onclick="sortResources('rating-high')">Meilleures évaluations</button>
-            <button class="sort-btn" onclick="sortResources('rating-low')">Faibles évaluations</button>
-            <button class="sort-btn" onclick="sortResources('date-new')">Plus récentes</button>
-        </div>
-
-        <!-- Conteneur pour les ressources -->
-        <div class="ressource-container" id="ressourceContainer">
-            <!-- Resources will be loaded by JavaScript -->
-        </div>
-    </div>
-
-    <div id="livres" class="content">
-        <h2>📖 Livres</h2>
-        <p>Découvrez une sélection de livres sur l'astronomie et les sciences.</p>
-
-        <div class="livre-container">
-            <div class="livre-card">
-                <img src="img1.jfif" alt="Livre 1">
-                <a href="https://example.com/livre1.pdf" target="_blank">Livre 1</a>
-            </div>
-            <div class="livre-card">
-                <img src="img2.jfif" alt="Livre 2">
-                <a href="https://example.com/livre2.pdf" target="_blank">Livre 2</a>
-            </div>
-            <div class="livre-card">
-                <img src="img3.jfif" alt="Livre 3">
-                <a href="https://example.com/livre3.pdf" target="_blank">Livre 3</a>
-            </div>
-            <div class="livre-card">
-                <img src="img4.jfif" alt="Livre 4">
-                <a href="https://example.com/livre4.pdf" target="_blank">Livre 4</a>
-            </div>
-        </div>
+    <!-- Affichage direct des ressources -->
+    <div class="ressource-container">
+        <?php
+        foreach ($listeressource as $row) {
+            if ($row['statut'] == 'publie') {
+                $ressource = new ressource(
+                    $row['id'],
+                    $row['titre'],
+                    $row['type_ressource'],
+                    $row['categorie'],
+                    $row['date_publication'],
+                    $row['description'],
+                    $row['fichier_ou_lien'],
+                    $row['statut']
+                );
+                $rating = $controller->getAverageRating($ressource->getId());
+                $ratingClass = '';
+                if ($rating != 'N/A') {
+                    if (floatval($rating) >= 4) {
+                        $ratingClass = 'evaluation-high';
+                    } else if (floatval($rating) >= 3) {
+                        $ratingClass = 'evaluation-medium';
+                    } else {
+                        $ratingClass = 'evaluation-low';
+                    }
+                }
+                ?>
+                <div class="ressource-card">
+                    <h3><?php echo htmlspecialchars($ressource->getTitre()); ?></h3>
+                    <p><strong>Catégorie :</strong> <?php echo htmlspecialchars($ressource->getCategorie()); ?></p>
+                    <p><strong>Date de publication :</strong> <?php echo htmlspecialchars($ressource->getDatePublication()); ?></p>
+                    <p><strong>Description :</strong> <?php echo htmlspecialchars($ressource->getDescription()); ?></p>
+                    <p><strong>Évaluation :</strong> <span class="evaluation <?php echo $ratingClass; ?>"><?php echo $rating; ?>/5</span></p>
+                    <a href="<?php echo htmlspecialchars($ressource->getFichierOuLien()); ?>" target="_blank">Voir la ressource</a>
+                    <a href="../ajoutc.php?id=<?php echo $ressource->getId(); ?>" class="btn btn-sm btn-outline-dark">Commenter</a>
+                </div>
+                <?php
+            }
+        }
+        ?>
     </div>
 
     <script>
-        function showSection(section) {
-            let sections = document.querySelectorAll('.content');
-            sections.forEach(sec => sec.classList.remove('active'));
-            document.getElementById(section).classList.add('active');
-        }
-
-        // Données des ressources
-        const ressources = [
-            <?php
-            foreach ($listeressource as $row) {
-                if ($row['statut'] == 'publie') {
-                    $ressource = new ressource(
-                        $row['id'],
-                        $row['titre'],
-                        $row['type_ressource'],
-                        $row['categorie'],
-                        $row['date_publication'],
-                        $row['description'],
-                        $row['fichier_ou_lien'],
-                        $row['statut']
-                    );
-                    $rating = $controller->getAverageRating($ressource->getId());
-                    $ratingValue = ($rating == 'N/A') ? 0 : floatval($rating);
-                    ?>
-                    {
-                        id: <?php echo json_encode($ressource->getId()); ?>,
-                        titre: <?php echo json_encode($ressource->getTitre()); ?>,
-                        categorie: <?php echo json_encode($ressource->getCategorie()); ?>,
-                        datePublication: <?php echo json_encode($ressource->getDatePublication()); ?>,
-                        description: <?php echo json_encode($ressource->getDescription()); ?>,
-                        fichierOuLien: <?php echo json_encode($ressource->getFichierOuLien()); ?>,
-                        rating: <?php echo json_encode($rating); ?>,
-                        ratingValue: <?php echo $ratingValue; ?>
-                    },
-                    <?php
-                }
-            }
-            ?>
-        ];
-
         // Fonction pour trier les ressources
         function sortResources(sortType) {
+            // Récupérer toutes les ressources
+            const container = document.querySelector('.ressource-container');
+            const cards = Array.from(container.getElementsByClassName('ressource-card'));
+            
             // Marquer le bouton actif
             document.querySelectorAll('.sort-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
 
-            // Copier le tableau pour ne pas modifier l'original
-            let sortedResources = [...ressources];
-
-            // Trier selon le critère
-            switch(sortType) {
-                case 'rating-high':
-                    sortedResources.sort((a, b) => {
-                        // S'assurer que les valeurs sont numériques et gérer N/A
-                        const valueA = a.rating === 'N/A' ? 0 : parseFloat(a.rating) || 0;
-                        const valueB = b.rating === 'N/A' ? 0 : parseFloat(b.rating) || 0;
-                        return valueB - valueA;
-                    });
-                    break;
-                case 'rating-low':
-                    sortedResources.sort((a, b) => {
-                        // S'assurer que les valeurs sont numériques et gérer N/A
-                        const valueA = a.rating === 'N/A' ? 0 : parseFloat(a.rating) || 0;
-                        const valueB = b.rating === 'N/A' ? 0 : parseFloat(b.rating) || 0;
-                        return valueA - valueB;
-                    });
-                    break;
-                case 'date-new':
-                    sortedResources.sort((a, b) => {
-                        // Convertir les chaînes de date en objets Date
-                        const dateA = new Date(a.datePublication);
-                        const dateB = new Date(b.datePublication);
+            // Trier les cartes
+            cards.sort((a, b) => {
+                switch(sortType) {
+                    case 'rating-high':
+                        const ratingA = parseFloat(a.querySelector('.evaluation').textContent) || 0;
+                        const ratingB = parseFloat(b.querySelector('.evaluation').textContent) || 0;
+                        return ratingB - ratingA;
+                    case 'rating-low':
+                        const ratingLowA = parseFloat(a.querySelector('.evaluation').textContent) || 0;
+                        const ratingLowB = parseFloat(b.querySelector('.evaluation').textContent) || 0;
+                        return ratingLowA - ratingLowB;
+                    case 'date-new':
+                        const dateA = new Date(a.querySelector('p:nth-child(3)').textContent.split(':')[1]);
+                        const dateB = new Date(b.querySelector('p:nth-child(3)').textContent.split(':')[1]);
                         return dateB - dateA;
-                    });
-                    break;
-                default:
-                    // Pas de tri, garder l'ordre d'origine
-                    break;
-            }
-
-            // Afficher les ressources triées
-            displayResources(sortedResources);
-        }
-
-        // Fonction pour afficher les ressources
-        function displayResources(resourceList) {
-            const container = document.getElementById('ressourceContainer');
-            container.innerHTML = '';
-
-            resourceList.forEach(resource => {
-                // Déterminer la classe CSS pour l'évaluation
-                let ratingClass = '';
-                if (resource.rating !== 'N/A') {
-                    if (parseFloat(resource.rating) >= 4) {
-                        ratingClass = 'evaluation-high';
-                    } else if (parseFloat(resource.rating) >= 3) {
-                        ratingClass = 'evaluation-medium';
-                    } else {
-                        ratingClass = 'evaluation-low';
-                    }
+                    default:
+                        return 0; // Garder l'ordre original
                 }
-
-                const card = document.createElement('div');
-                card.className = 'ressource-card';
-                card.innerHTML = `
-                    <h3>${resource.titre}</h3>
-                    <p><strong>Categorie :</strong> ${resource.categorie}</p>
-                    <p><strong>Date de publication :</strong> ${resource.datePublication}</p>
-                    <p><strong>Description :</strong> ${resource.description}</p>
-                    <p><strong>Evaluation :</strong> <span class="evaluation ${ratingClass}">${resource.rating}/5</span></p>
-                    <a href="${resource.fichierOuLien}" target="_blank">ressource</a>
-                    <div class="text-center mt-2">
-                        <a class="btn btn-sm btn-outline-dark" href="../ajoutc.php?id=${resource.id}">Commenter</a>
-                    </div>
-                `;
-                container.appendChild(card);
             });
+
+            // Réinsérer les cartes triées
+            cards.forEach(card => container.appendChild(card));
         }
-
-        // Afficher les ressources au chargement
-        document.addEventListener('DOMContentLoaded', function() {
-            displayResources(ressources);
-        });
     </script>
-
 </body>
 </html>

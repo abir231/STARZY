@@ -1,7 +1,7 @@
 <?php
 // Inclusion des classes nécessaires
-require_once('C:\xampp\htdocs\chaima\controller\ressourceC.php');
-require_once('C:\xampp\htdocs\chaima\controller\commentaireC.php');
+require_once('C:\xampp\htdocs\integration\controller\ressourceC.php');
+require_once('C:\xampp\htdocs\integration\controller\commentaireC.php');
 
 // Création des instances de contrôleurs
 $ressourceC = new ressourceC();
@@ -63,219 +63,292 @@ foreach ($commentsByMonth as $month) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statistiques - Starzy</title>
-    <link href="back-office/static/css/app.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>STARZY - Statistiques</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="css/font-awesome.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
+        :root {
+            --primary-color: #0f0c29;
+            --secondary-color: #1a237e;
+            --accent-color: rgb(207, 144, 165);
+            --text-light: #ffffff;
+            --card-bg: rgba(15, 12, 41, 0.95);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: var(--card-bg);
+            padding: 20px 0;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Main Content Styles */
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
         .dashboard-card {
-            background-color: #fff;
+            background: var(--card-bg);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .stat-number {
             font-size: 2.5rem;
             font-weight: bold;
-            color: #3b7ddd;
+            color: var(--accent-color);
         }
-        
+
         .stat-title {
             font-size: 1rem;
-            color: #6c757d;
+            color: var(--text-light);
+            opacity: 0.8;
         }
-        
+
         .chart-container {
             height: 300px;
             margin-bottom: 20px;
+            position: relative;
         }
-        
+
         .top-list {
             list-style-type: none;
             padding: 0;
         }
-        
+
         .top-list li {
             padding: 10px;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
+
         .top-list li:last-child {
             border-bottom: none;
         }
-        
+
         .rating {
             font-weight: bold;
             color: #ffc107;
         }
-        
+
         .comment-count {
             font-weight: bold;
-            color: #17a2b8;
+            color: var(--accent-color);
+        }
+
+        h5 {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Footer Styles */
+        .footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: var(--text-light);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer a:hover {
+            opacity: 1;
+        }
+
+        /* Chart Customization */
+        canvas {
+            background: transparent !important;
         }
     </style>
 </head>
 <body>
     <div class="wrapper">
-        <nav id="sidebar" class="sidebar js-sidebar">
-            <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="index.html">
-                    <span class="align-middle">Starzy</span>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <h2>STARZY</h2>
+            </div>
+            <div class="sidebar-menu">
+                <a href="indiv.php" class="sidebar-link">
+                    <i class="fa fa-dashboard"></i> Tableau de bord
                 </a>
-
-                <ul class="sidebar-nav">
-                    <li class="sidebar-header"></li>
-
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="liste.php">
-                            <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des ressources</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="listeco.php">
-                            <i class="align-middle" data-feather="message-square"></i> <span class="align-middle">Gestion des Commentaires</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item active">
-                        <a class="sidebar-link" href="statistiques.php">
-                            <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Statistiques</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href=" ">
-                            <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Se déconnecter</span>
-                        </a>
-                    </li>
-                </ul>
+                <a href="liste.php" class="sidebar-link">
+                    <i class="fa fa-book"></i> Ressources
+                </a>
+                <a href="listeco.php" class="sidebar-link">
+                    <i class="fa fa-comments"></i> Commentaires
+                </a>
+                <a href="statistiques.php" class="sidebar-link active">
+                    <i class="fa fa-bar-chart"></i> Statistiques
+                </a>
             </div>
         </nav>
 
         <div class="main">
-            <main class="content">
-                <div class="container-fluid p-0">
-                    <h1 class="h3 mb-3"><strong>Statistiques</strong> Tableau de bord</h1>
-                    
-                    <!-- Statistiques générales -->
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="dashboard-card text-center">
-                                <div class="stat-number"><?php echo $totalResources; ?></div>
-                                <div class="stat-title">Ressources totales</div>
-                            </div>
+            <div class="container-fluid p-0">
+                <h1 class="h3 mb-3">Tableau de bord statistiques</h1>
+                
+                <!-- Statistiques générales -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="dashboard-card text-center">
+                            <div class="stat-number"><?php echo $totalResources; ?></div>
+                            <div class="stat-title">Ressources totales</div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="dashboard-card text-center">
-                                <div class="stat-number"><?php echo $totalComments; ?></div>
-                                <div class="stat-title">Commentaires totaux</div>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card text-center">
+                            <div class="stat-number"><?php echo $totalComments; ?></div>
+                            <div class="stat-title">Commentaires totaux</div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="dashboard-card text-center">
-                                <div class="stat-number"><?php echo $averageRating; ?></div>
-                                <div class="stat-title">Note moyenne globale</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="dashboard-card text-center">
+                            <div class="stat-number"><?php echo number_format($averageRating, 1); ?></div>
+                            <div class="stat-title">Note moyenne globale</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Graphiques -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5>Ressources par catégorie</h5>
+                            <div class="chart-container">
+                                <canvas id="categoryChart"></canvas>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Graphiques -->
-                    <div class="row">
-                        <!-- Graphique par catégorie -->
-                        <div class="col-md-6">
-                            <div class="dashboard-card">
-                                <h5>Ressources par catégorie</h5>
-                                <div class="chart-container">
-                                    <canvas id="categoryChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Graphique par type -->
-                        <div class="col-md-6">
-                            <div class="dashboard-card">
-                                <h5>Ressources par type</h5>
-                                <div class="chart-container">
-                                    <canvas id="typeChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Distribution des notes -->
-                        <div class="col-md-6">
-                            <div class="dashboard-card">
-                                <h5>Distribution des notes</h5>
-                                <div class="chart-container">
-                                    <canvas id="ratingChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tendances -->
-                        <div class="col-md-6">
-                            <div class="dashboard-card">
-                                <h5>Tendances mensuelles</h5>
-                                <div class="chart-container">
-                                    <canvas id="trendsChart"></canvas>
-                                </div>
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5>Ressources par type</h5>
+                            <div class="chart-container">
+                                <canvas id="typeChart"></canvas>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Top Ressources -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="dashboard-card">
-                                <h5>Top 5 des ressources les mieux notées</h5>
-                                <ul class="top-list">
-                                    <?php foreach ($topRatedResources as $resource): ?>
-                                    <li>
-                                        <strong><?php echo $resource['titre']; ?></strong>
-                                        <span class="float-end rating"><?php echo round($resource['moyenne'], 1); ?> / 5</span>
-                                    </li>
-                                    <?php endforeach; ?>
-                                </ul>
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5>Distribution des notes</h5>
+                            <div class="chart-container">
+                                <canvas id="ratingChart"></canvas>
                             </div>
                         </div>
-                        
-                        <div class="col-md-6">
-                            <div class="dashboard-card">
-                                <h5>Top 5 des ressources les plus commentées</h5>
-                                <ul class="top-list">
-                                    <?php foreach ($mostCommentedResources as $resource): ?>
-                                    <li>
-                                        <strong><?php echo $resource['titre']; ?></strong>
-                                        <span class="float-end comment-count"><?php echo $resource['nb_commentaires']; ?> commentaires</span>
-                                    </li>
-                                    <?php endforeach; ?>
-                                </ul>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5>Tendances mensuelles</h5>
+                            <div class="chart-container">
+                                <canvas id="trendsChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
+                
+                <!-- Top Ressources -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5>Top 5 des ressources les mieux notées</h5>
+                            <ul class="top-list">
+                                <?php foreach ($topRatedResources as $resource): ?>
+                                <li>
+                                    <strong><?php echo htmlspecialchars($resource['titre']); ?></strong>
+                                    <span class="rating"><?php echo number_format($resource['moyenne'], 1); ?> <i class="fa fa-star"></i></span>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="dashboard-card">
+                            <h5>Top 5 des ressources les plus commentées</h5>
+                            <ul class="top-list">
+                                <?php foreach ($mostCommentedResources as $resource): ?>
+                                <li>
+                                    <strong><?php echo htmlspecialchars($resource['titre']); ?></strong>
+                                    <span class="comment-count"><?php echo $resource['nb_commentaires']; ?> <i class="fa fa-comments"></i></span>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <footer class="footer">
                 <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
+                    <div class="row">
+                        <div class="col-6">
                             <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>Starzy</strong></a> &copy;
+                                <strong>Starzy</strong> &copy; <?= date('Y') ?>
                             </p>
                         </div>
                         <div class="col-6 text-end">
-                            <ul class="list-inline">
+                            <ul class="list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <a class="text-muted" href="#">Support</a>
+                                    <a href="#">Support</a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a class="text-muted" href="#">Help Center</a>
+                                    <a href="#">Centre d'aide</a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a class="text-muted" href="#">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="#">Terms</a>
+                                    <a href="#">Confidentialité</a>
                                 </li>
                             </ul>
                         </div>
@@ -285,26 +358,47 @@ foreach ($commentsByMonth as $month) {
         </div>
     </div>
 
-    <script src="back-office/static/js/app.js"></script>
+    <!-- Essential Scripts -->
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     
     <script>
-        // Initialisation des graphiques
+        // Configuration des couleurs pour les graphiques
+        const chartColors = {
+            background: [
+                'rgba(207, 144, 165, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)'
+            ],
+            border: [
+                'rgba(207, 144, 165, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ]
+        };
+
+        // Configuration globale de Chart.js
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+
         document.addEventListener('DOMContentLoaded', function() {
             // Graphique par catégorie
-            var categoryChart = new Chart(document.getElementById('categoryChart'), {
+            new Chart(document.getElementById('categoryChart'), {
                 type: 'pie',
                 data: {
                     labels: <?php echo json_encode($categoryLabels); ?>,
                     datasets: [{
                         data: <?php echo json_encode($categoryData); ?>,
-                        backgroundColor: [
-                            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'
-                        ],
-                        hoverBackgroundColor: [
-                            '#2e59d9', '#17a673', '#2c9faf', '#dda20a', '#be2617', '#60616f'
-                        ],
-                        hoverBorderColor: "rgba(234, 236, 244, 1)",
-                    }],
+                        backgroundColor: chartColors.background,
+                        borderColor: chartColors.border,
+                        borderWidth: 1
+                    }]
                 },
                 options: {
                     maintainAspectRatio: false,
@@ -312,12 +406,8 @@ foreach ($commentsByMonth as $month) {
                     plugins: {
                         legend: {
                             position: 'right',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.raw + ' ressources';
-                                }
+                            labels: {
+                                color: '#ffffff'
                             }
                         }
                     }
@@ -325,20 +415,16 @@ foreach ($commentsByMonth as $month) {
             });
             
             // Graphique par type
-            var typeChart = new Chart(document.getElementById('typeChart'), {
+            new Chart(document.getElementById('typeChart'), {
                 type: 'doughnut',
                 data: {
                     labels: <?php echo json_encode($typeLabels); ?>,
                     datasets: [{
                         data: <?php echo json_encode($typeData); ?>,
-                        backgroundColor: [
-                            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'
-                        ],
-                        hoverBackgroundColor: [
-                            '#2e59d9', '#17a673', '#2c9faf', '#dda20a'
-                        ],
-                        hoverBorderColor: "rgba(234, 236, 244, 1)",
-                    }],
+                        backgroundColor: chartColors.background,
+                        borderColor: chartColors.border,
+                        borderWidth: 1
+                    }]
                 },
                 options: {
                     maintainAspectRatio: false,
@@ -346,12 +432,8 @@ foreach ($commentsByMonth as $month) {
                     plugins: {
                         legend: {
                             position: 'right',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.raw + ' ressources';
-                                }
+                            labels: {
+                                color: '#ffffff'
                             }
                         }
                     }
@@ -359,15 +441,15 @@ foreach ($commentsByMonth as $month) {
             });
             
             // Graphique de distribution des notes
-            var ratingChart = new Chart(document.getElementById('ratingChart'), {
+            new Chart(document.getElementById('ratingChart'), {
                 type: 'bar',
                 data: {
                     labels: <?php echo json_encode($ratingLabels); ?>,
                     datasets: [{
                         label: 'Nombre de notes',
                         data: <?php echo json_encode($ratingData); ?>,
-                        backgroundColor: '#ffc107',
-                        borderColor: '#e0a800',
+                        backgroundColor: 'rgba(207, 144, 165, 0.8)',
+                        borderColor: 'rgba(207, 144, 165, 1)',
                         borderWidth: 1
                     }]
                 },
@@ -378,7 +460,20 @@ foreach ($commentsByMonth as $month) {
                         y: {
                             beginAtZero: true,
                             ticks: {
+                                color: '#ffffff',
                                 precision: 0
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
                             }
                         }
                     }
@@ -386,7 +481,7 @@ foreach ($commentsByMonth as $month) {
             });
             
             // Graphique des tendances
-            var trendsChart = new Chart(document.getElementById('trendsChart'), {
+            new Chart(document.getElementById('trendsChart'), {
                 type: 'line',
                 data: {
                     labels: <?php echo json_encode($resourceMonthLabels); ?>,
@@ -394,20 +489,20 @@ foreach ($commentsByMonth as $month) {
                         {
                             label: 'Ressources ajoutées',
                             data: <?php echo json_encode($resourceMonthData); ?>,
-                            backgroundColor: 'rgba(78, 115, 223, 0.05)',
-                            borderColor: 'rgba(78, 115, 223, 1)',
+                            borderColor: 'rgba(207, 144, 165, 1)',
+                            backgroundColor: 'rgba(207, 144, 165, 0.1)',
                             borderWidth: 2,
-                            pointBackgroundColor: 'rgba(78, 115, 223, 1)',
-                            tension: 0.3
+                            fill: true,
+                            tension: 0.4
                         },
                         {
                             label: 'Commentaires ajoutés',
                             data: <?php echo json_encode($commentMonthData); ?>,
-                            backgroundColor: 'rgba(28, 200, 138, 0.05)',
-                            borderColor: 'rgba(28, 200, 138, 1)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
                             borderWidth: 2,
-                            pointBackgroundColor: 'rgba(28, 200, 138, 1)',
-                            tension: 0.3
+                            fill: true,
+                            tension: 0.4
                         }
                     ]
                 },
@@ -418,7 +513,20 @@ foreach ($commentsByMonth as $month) {
                         y: {
                             beginAtZero: true,
                             ticks: {
+                                color: '#ffffff',
                                 precision: 0
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
                             }
                         }
                     }

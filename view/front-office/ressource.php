@@ -306,9 +306,34 @@ input:focus, select:focus, textarea:focus {
                 grid-template-columns: 1fr;
             }
         }
+
+        .btn-back {
+            display: inline-block;
+            padding: 10px 30px;
+            background: linear-gradient(45deg, rgba(0, 191, 255, 0.7), rgba(138, 43, 226, 0.7));
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 20px;
+            text-transform: uppercase;
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(45deg, rgba(0, 191, 255, 1), rgba(138, 43, 226, 1));
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+            color: white;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
+  <a href="../designe.php" class="btn-back">
+    <i class="fa fa-arrow-left"></i> Retour
+  </a>
 
     <nav class="sidebar">
         <ul class="nav-links">

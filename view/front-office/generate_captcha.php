@@ -11,6 +11,13 @@ $captcha_word = generateCaptchaWord();
 // Stocker le mot en session pour vérification ultérieure
 $_SESSION['captcha_word'] = $captcha_word;
 
+// Vérifier si GD est disponible
+if (!extension_loaded('gd') || !function_exists('gd_info')) {
+    // Si GD n'est pas disponible, rediriger vers le captcha texte simple
+    header('Location: simple_captcha.php');
+    exit();
+}
+
 // Paramètres de l'image
 $width = 200;
 $height = 60;
@@ -37,54 +44,39 @@ for ($i = 0; $i < 5; $i++) {
     imageline($image, rand(0, $width), rand(0, $height), rand(0, $width), rand(0, $height), $noise_color);
 }
 
-// Ajouter le texte du captcha
-// Différents angles pour chaque lettre
-$x = 30;
-$length = strlen($captcha_word);
+// Chemins possibles vers les polices
+$fonts = [
+    'C:\Windows\Fonts\arial.ttf',
+    'C:\Windows\Fonts\verdana.ttf',
+    'C:\Windows\Fonts\ARIALBD.TTF',
+    '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',  // Linux
+    '/usr/share/fonts/TTF/arial.ttf'                    // Linux
+];
 
-// Vérifier si on peut utiliser les fonctions de texte avancées
-if (function_exists('imagettftext')) {
-    // Chemins possibles vers les polices
-    $fonts = [
-        'C:\Windows\Fonts\arial.ttf',
-        'C:\Windows\Fonts\verdana.ttf',
-        'C:\Windows\Fonts\ARIALBD.TTF',
-        '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',  // Linux
-        '/usr/share/fonts/TTF/arial.ttf'                    // Linux
-    ];
-    
-    // Trouver une police qui existe
-    $font_path = null;
-    foreach ($fonts as $font) {
-        if (file_exists($font)) {
-            $font_path = $font;
-            break;
-        }
+// Trouver une police qui existe
+$font_path = null;
+foreach ($fonts as $font) {
+    if (file_exists($font)) {
+        $font_path = $font;
+        break;
     }
-    
-    // Si une police a été trouvée, utiliser imagettftext
-    if ($font_path) {
-        for ($i = 0; $i < $length; $i++) {
-            $angle = rand(-15, 15);
-            $letter = $captcha_word[$i];
-            imagettftext($image, $font_size, $angle, $x, 40, $text_color, $font_path, $letter);
-            $x += 20 + rand(0, 10);
-        }
-    } else {
-        // Pas de police TrueType trouvée, utiliser une méthode de secours
-        $font_size = 5; // Taille de police pour imagestring (1-5)
-        $x = 30;
-        for ($i = 0; $i < $length; $i++) {
-            $letter = $captcha_word[$i];
-            imagestring($image, $font_size, $x, 20, $letter, $text_color);
-            $x += 30;
-        }
+}
+
+// Si une police a été trouvée, utiliser imagettftext
+if ($font_path) {
+    $x = 30;
+    $length = strlen($captcha_word);
+    for ($i = 0; $i < $length; $i++) {
+        $angle = rand(-15, 15);
+        $letter = $captcha_word[$i];
+        imagettftext($image, $font_size, $angle, $x, 40, $text_color, $font_path, $letter);
+        $x += 20 + rand(0, 10);
     }
 } else {
-    // La fonction imagettftext n'est pas disponible
+    // Pas de police TrueType trouvée, utiliser une méthode de secours
     $font_size = 5; // Taille de police pour imagestring (1-5)
     $x = 30;
-    for ($i = 0; $i < $length; $i++) {
+    for ($i = 0; $i < strlen($captcha_word); $i++) {
         $letter = $captcha_word[$i];
         imagestring($image, $font_size, $x, 20, $letter, $text_color);
         $x += 30;

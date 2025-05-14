@@ -3,7 +3,7 @@
 
 
 // Include the necessary userC.php file
-require_once('C:\xampp\htdocs\chaima\controller\ressourceC.php');
+require_once('C:\xampp\htdocs\integration\controller\ressourceC.php');
 
 // Create an instance of UserC class
 $ressourceC = new ressourceC();
@@ -12,311 +12,235 @@ $ressourceC = new ressourceC();
 $tab = $ressourceC->listRessources();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords"
-		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>STARZY - Gestion des Ressources</title>
+	
+	<!-- Bootstrap CSS -->
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<!-- Font Awesome for icons -->
+	<link href="css/font-awesome.min.css" rel="stylesheet">
+	
+	<style>
+		:root {
+			--primary-color: #0f0c29;
+			--secondary-color: #1a237e;
+			--accent-color: rgb(207, 144, 165);
+			--text-light: #ffffff;
+		}
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+		body {
+			background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+			color: var(--text-light);
+			font-family: Arial, sans-serif;
+			min-height: 100vh;
+		}
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+		.wrapper {
+			display: flex;
+			min-height: 100vh;
+		}
 
-	<title>Starzy</title>
+		/* Sidebar Styles */
+		.sidebar {
+			width: 250px;
+			background: rgba(15, 12, 41, 0.95);
+			padding: 20px 0;
+		}
 
-	<link href="back-office/static/css/app.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
- 
+		.sidebar-brand {
+			padding: 20px;
+			text-align: center;
+			color: var(--text-light);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
 
- 	<style>
-/* Force table width to be larger than viewport */
-.table {
-    min-width: 2000px !important;
-}
+		.sidebar-link {
+			display: block;
+			padding: 12px 20px;
+			color: var(--text-light);
+			text-decoration: none;
+			transition: all 0.3s;
+		}
 
-/* Enable horizontal scrolling on the container */
-.table-container {
-    width: 100%;
-    overflow-x: scroll !important;
-    padding-bottom: 10px;
-}
+		.sidebar-link:hover,
+		.sidebar-link.active {
+			background: rgba(255, 255, 255, 0.1);
+			color: var(--accent-color);
+		}
 
-/* More space in cells */
-td, th {
-    min-width: 120px;
-    padding: 10px;
-}
+		/* Main Content Styles */
+		.main {
+			flex: 1;
+			padding: 20px;
+		}
 
-/* Full-width card */
-.card {
-    width: 100%;
-}
+		.card {
+			background: rgba(15, 12, 41, 0.95);
+			border-radius: 10px;
+			box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+			margin-bottom: 20px;
+		}
 
-/* Ensure main content can scroll */
-.main {
-    overflow-x: auto !important;
-}
+		.card-header {
+			padding: 15px 20px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
 
-/* Force page to have horizontal scroll */
-body {
-    overflow-x: auto !important;
-}
+		.btn-primary {
+			background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+			border: none;
+			padding: 8px 16px;
+			color: var(--text-light);
+			border-radius: 5px;
+			transition: all 0.3s;
+		}
 
-.wrapper {
-    overflow-x: visible !important;
-}
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		}
 
-/* Style for active sort button */
-.sort-btn.active {
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    font-weight: bold;
-}
+		/* Table Styles */
+		.table {
+			color: var(--text-light);
+		}
+
+		.table th {
+			background: rgba(26, 35, 126, 0.3);
+			border-color: rgba(255, 255, 255, 0.1);
+		}
+
+		.table td {
+			border-color: rgba(255, 255, 255, 0.1);
+		}
+
+		.table tr:hover {
+			background: rgba(255, 255, 255, 0.05);
+		}
+
+		.btn-action {
+			padding: 5px 10px;
+			margin: 0 2px;
+			border-radius: 4px;
+			color: var(--text-light);
+		}
+
+		.btn-info { background-color: #17a2b8; }
+		.btn-warning { background-color: #ffc107; }
+		.btn-danger { background-color: #dc3545; }
+		.btn-secondary { background-color: #6c757d; }
+
+		/* Footer Styles */
+		.footer {
+			padding: 20px;
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+			margin-top: auto;
+		}
 	</style>
+</head>
+
 <body>
 	<div class="wrapper">
-		<nav id="sidebar" class="sidebar js-sidebar">
-			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="index.html">
-					<span class="align-middle">Starzy</span>
+		<!-- Sidebar -->
+		<nav class="sidebar">
+			<div class="sidebar-brand">
+				<h2>STARZY</h2>
+			</div>
+			<div class="sidebar-menu">
+				<a href="indiv.php" class="sidebar-link">
+					<i class="fa fa-dashboard"></i> Tableau de bord
 				</a>
-
-				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-
-					</li>
-
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="liste.php">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des ressources </span>
-						</a>
-					</li>
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="listeco.php">
-							<i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Gestion des Commentaires </span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="statistiques.php">
-							<i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Statistiques</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href=" ">
-							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Se
-								deconnecter</span>
-						</a>
-					</li>
-
-
-
-
-
-
+				<a href="liste.php" class="sidebar-link active">
+					<i class="fa fa-book"></i> Ressources
+				</a>
+				<a href="listeco.php" class="sidebar-link">
+					<i class="fa fa-comments"></i> Commentaires
+				</a>
+				<a href="statistiques.php" class="sidebar-link">
+					<i class="fa fa-bar-chart"></i> Statistiques
+				</a>
 			</div>
 		</nav>
 
+		<!-- Main Content -->
 		<div class="main">
-
-
-			<main class="content">
-			<div class="container-fluid">
-
-					<h1 class="h3 mb-3"><strong>Les ressources :  </strong> </h1>
-					<div class="row">
-						<div class="col-12 d-flex">
-							<div class="card flex-fill">
-								<div class="card-header">
-
-									<h5 class="card-title mb-0"> Liste des ressources à gérer </h5>
-									
-									<!-- Boutons de tri -->
-									<div class="sort-controls mt-3">
-										<button class="btn btn-sm btn-primary sort-btn" onclick="sortTable('default')">Par défaut</button>
-										<button class="btn btn-sm btn-success sort-btn" onclick="sortTable('rating-high')">Meilleures évaluations</button>
-										<button class="btn btn-sm btn-warning sort-btn" onclick="sortTable('rating-low')">Faibles évaluations</button>
-									</div>
-								</div>
-								<div class="table-container">
-									<table class="table align-items-center mb-0">
-										<thead>
-											<tr>
-												<th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													ID </th>
-												<th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-													Titre </th>
-												<th
-													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													Type</th>
-												<th
-													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													Categorie </th>
-												<th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													Date publication</th>
-												<th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-													description
-                                                </th>
-                                                <th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-													Reference
-                                                </th>
-                                                <th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-													Statut</th>
-
-                                                <th
-													class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-													Evaluation</th>
-
-												<th
-													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													delete </th>
-												<th
-													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													Detail </th>
-												<th
-													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													Update</th>
-
-													<th
-													class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-													Commentaire</th>
-
-											</tr>
-										</thead>
-										<?php
-										foreach ($tab as $ressource) {
-											// Calculate average rating for this resource
-											$evaluation = $ressourceC->getAverageRating($ressource['id']);
-											?>
-											<tbody>
-												<tr>
-													<td>
-														<div class="d-flex px-2 py-1">
-															<div class="d-flex flex-column justify-content-center">
-																<h6 class="mb-0 text-sm">
-																	<?= $ressource['id']; ?>
-																	<!-- Utilisez les clés de tableau -->
-																</h6>
-															</div>
-														</div>
-													</td>
-													<td>
-														<p class="text-xs font-weight-bold mb-0">
-														<?= $ressource['titre']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</p>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $ressource['type_ressource']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</span>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $ressource['categorie']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</span>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $ressource['date_publication']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</span>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $ressource['description']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</span>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $ressource['fichier_ou_lien']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</span>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $ressource['statut']; ?>
-														<!-- Utilisez les clés de tableau -->
-														</span>
-													</td>
-													<td class="align-middle text-center">
-														<span class="text-secondary text-xs font-weight-bold">
-														<?= $evaluation; ?>
-														</span>
-													</td>
-													<td class="align-middle text-center text-sm">
-														<span class="badge bg-danger">
-															<a
-																href="delete.php?id=<?= $ressource['id']; ?>">ici</a>
-														</span>
-													</td>
-													<td class="align-middle text-center text-sm">
-														<span class="badge bg-success">
-															<a
-																href="show.php?id=<?= $ressource['id']; ?>">ici</a>
-														</span>
-													</td>
-													<td class="align-middle text-center text-sm">
-														<span class="badge bg-warning">
-															<a
-																href="update.php?id=<?= $ressource['id']; ?>">ici</a>
-														</span>
-													</td>
-													<td class="align-middle text-center text-sm">
-														<span class="badge bg-secondary">
-															<a
-																href="listec.php?id=<?= $ressource['id']; ?> ">ici</a>
-														</span>
-													</td>
-												</tr>
-											</tbody>
-											<?php
-										}
-										?>
-									</table>
-								</div>
-							</div>
-						</div>
+			<div class="card">
+ 
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Titre</th>
+									<th>Type</th>
+									<th>Catégorie</th>
+									<th>Date</th>
+									<th>Statut</th>
+									<th>Évaluation</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($tab as $ressource) {
+									$evaluation = $ressourceC->getAverageRating($ressource['id']);
+								?>
+								<tr>
+									<td><?= htmlspecialchars($ressource['id']) ?></td>
+									<td><?= htmlspecialchars($ressource['titre']) ?></td>
+									<td><?= htmlspecialchars($ressource['type_ressource']) ?></td>
+									<td><?= htmlspecialchars($ressource['categorie']) ?></td>
+									<td><?= htmlspecialchars($ressource['date_publication']) ?></td>
+									<td><?= htmlspecialchars($ressource['statut']) ?></td>
+									<td><?= ($evaluation === 'N/A') ? '0.0' : number_format($evaluation, 1) ?> <i class="fa fa-star" style="color: #ffc107;"></i></td>
+									<td>
+										<a href="show.php?id=<?= $ressource['id'] ?>" class="btn btn-action btn-info" title="Voir">
+											<i class="fa fa-eye"></i>
+										</a>
+										<a href="update.php?id=<?= $ressource['id'] ?>" class="btn btn-action btn-warning" title="Modifier">
+											<i class="fa fa-pencil"></i>
+										</a>
+										<a href="delete.php?id=<?= $ressource['id'] ?>" class="btn btn-action btn-danger" title="Supprimer" 
+										   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ressource ?')">
+											<i class="fa fa-trash"></i>
+										</a>
+										<a href="listec.php?id=<?= $ressource['id'] ?>" class="btn btn-action btn-secondary" title="Commentaires">
+											<i class="fa fa-comments"></i>
+										</a>
+									</td>
+								</tr>
+								<?php } ?>
+							</tbody>
+						</table>
 					</div>
 				</div>
-			</main>
+			</div>
 
 			<footer class="footer">
 				<div class="container-fluid">
-					<div class="row text-muted">
-						<div class="col-6 text-start">
+					<div class="row">
+						<div class="col-6">
 							<p class="mb-0">
-								<a class="text-muted" href="https://adminkit.io/"
-									target="_blank"><strong>CultuRevive</strong></a> &copy;
+								<strong>Starzy</strong> &copy; <?= date('Y') ?>
 							</p>
 						</div>
 						<div class="col-6 text-end">
-							<ul class="list-inline">
+							<ul class="list-inline mb-0">
 								<li class="list-inline-item">
-									<a class="text-muted" href=" " target="_blank">Support</a>
+									<a href="#" class="text-light">Support</a>
 								</li>
 								<li class="list-inline-item">
-									<a class="text-muted" href=" " target="_blank">Help Center</a>
+									<a href="#" class="text-light">Centre d'aide</a>
 								</li>
 								<li class="list-inline-item">
-									<a class="text-muted" href="  " target="_blank">Privacy</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href=" " target="_blank">Terms</a>
+									<a href="#" class="text-light">Confidentialité</a>
 								</li>
 							</ul>
 						</div>
@@ -326,67 +250,9 @@ body {
 		</div>
 	</div>
 
-	<script src="back-office/static/js/app.js"></script>
-
-	<script>
-		// Fonction simplifiée pour trier le tableau des ressources
-		function sortTable(sortType) {
-			// Récupérer toutes les lignes du tableau dans un array (sélection plus précise)
-			const tableRows = document.querySelectorAll('table.align-items-center tbody tr');
-			const rowsArray = Array.from(tableRows);
-			
-			// Si aucune ligne n'est trouvée, sortir
-			if (rowsArray.length === 0) {
-				alert("Aucune donnée à trier");
-				return;
-			}
-			
-			// Mettre en surbrillance le bouton actif
-			document.querySelectorAll('.sort-btn').forEach(btn => {
-				btn.classList.remove('active');
-			});
-			event.target.classList.add('active');
-			
-			// Tri par défaut - recharger la page
-			if (sortType === 'default') {
-				window.location.reload();
-				return;
-			}
-			
-			// Trier les lignes selon le critère
-			rowsArray.sort((rowA, rowB) => {
-				let valueA, valueB;
-				
-				// Colonne de l'évaluation (index 8)
-				if (sortType === 'rating-high' || sortType === 'rating-low') {
-					// Trouver la cellule de l'évaluation (9ème colonne)
-					const cellA = rowA.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
-					const cellB = rowB.querySelector('td:nth-child(9)')?.textContent.trim() || "0";
-					
-					// Convertir en nombre (considérer 'N/A' comme 0)
-					valueA = cellA === 'N/A' ? 0 : parseFloat(cellA) || 0;
-					valueB = cellB === 'N/A' ? 0 : parseFloat(cellB) || 0;
-					
-					// Ordre croissant ou décroissant
-					return sortType === 'rating-high' ? valueB - valueA : valueA - valueB;
-				}
-				
-				return 0;
-			});
-			
-			// Récupérer le parent (tbody)
-			const tbody = tableRows[0].parentNode;
-			
-			// Détacher les lignes du DOM
-			const detachedRows = rowsArray.map(row => row.parentNode.removeChild(row));
-			
-			// Réinsérer les lignes triées
-			detachedRows.forEach(row => {
-				tbody.appendChild(row);
-			});
-		}
-	</script>
-
+	<!-- Essential Scripts -->
+	<script src="js/vendor/jquery-1.12.4.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 </body>
 
 </html>
